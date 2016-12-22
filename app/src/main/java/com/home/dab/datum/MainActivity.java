@@ -1,10 +1,11 @@
 package com.home.dab.datum;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.home.dab.datum.demo.changeIcon.ChangeIcon;
 import com.home.dab.datum.demo.download.Download;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,5 +22,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void download(View view) {
         startActivity(new Intent(MainActivity.this, Download.class));
+    }
+
+    public void changeIcon(View view) {
+        startActivity(new Intent(MainActivity.this, ChangeIcon.class));
     }
 }

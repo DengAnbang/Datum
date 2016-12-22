@@ -2,6 +2,7 @@ package com.home.dab.datum.demo.net.tool;
 
 import android.util.Log;
 
+import com.home.dab.datum.demo.net.download.DownloadInfo;
 import com.home.dab.datum.demo.net.download.DownloadResponseBody;
 import com.home.dab.datum.demo.net.download.IDownloadCallback;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -42,12 +43,12 @@ public class ApiServiceFactory {
      * @param downloadCallback
      * @return
      */
-    public static ApiService getDownloadApiService(IDownloadCallback downloadCallback) {
+    public static ApiService getDownloadApiService(IDownloadCallback downloadCallback,DownloadInfo downloadInfo) {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(baseUrl)
-                .client(getDownloadOkHttpClient(downloadCallback))
+                .client(getDownloadOkHttpClient(downloadCallback,downloadInfo))
                 .build()
                 .create(ApiService.class);
     }
@@ -77,10 +78,10 @@ public class ApiServiceFactory {
      * @param downloadCallback
      * @return
      */
-    private static OkHttpClient getDownloadOkHttpClient(IDownloadCallback downloadCallback) {
+    private static OkHttpClient getDownloadOkHttpClient(IDownloadCallback downloadCallback,DownloadInfo downloadInfo) {
         return new OkHttpClient.Builder()
                 .addInterceptor(chain -> chain.proceed(chain.request()).newBuilder()
-                        .body(new DownloadResponseBody(chain.proceed(chain.request()),downloadCallback))
+                        .body(new DownloadResponseBody(chain.proceed(chain.request()),downloadCallback,downloadInfo))
                         .build()).build();
     }
 }

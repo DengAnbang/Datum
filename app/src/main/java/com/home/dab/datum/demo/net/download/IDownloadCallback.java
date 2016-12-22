@@ -8,5 +8,5 @@ public interface IDownloadCallback {
 
     void onProgressChange(long progress, long total);
 
-    void onPauseDownload(long haveDownloaded, long total);
+    void onPauseDownload(DownloadInfo info);
 }

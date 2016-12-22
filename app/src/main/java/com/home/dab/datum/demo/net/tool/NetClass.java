@@ -5,6 +5,7 @@ import android.util.Log;
 import com.home.dab.datum.demo.net.download.DownloadInfo;
 import com.home.dab.datum.demo.net.download.DownloadTool;
 import com.home.dab.datum.demo.net.download.IDownloadCallback;
+import com.home.dab.datum.tool.SPTool;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -23,7 +24,7 @@ import okhttp3.ResponseBody;
 public class NetClass {
     private static final String TAG = "NetClass";
     private static volatile NetClass instance;
-    public DownloadInfo mInfo;
+
 
     private NetClass() {
 
@@ -45,31 +46,33 @@ public class NetClass {
 
     public void downloadFile(String url, String fileStoreDir, String fileName, IDownloadCallback downloadCallback) {
         DownloadInfo downloadInfo = getDownloadInfo(url);
-        ApiService apiService = ApiServiceFactory.getDownloadApiService(downloadCallback);
         Observable<ResponseBody> responseBodyObservable;
+//        ApiService apiService = ApiServiceFactory.getDownloadApiService(downloadCallback, downloadInfo);
         if (downloadInfo == null) {
-            responseBodyObservable = apiService.download(url)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(Schedulers.io())
-                    .map(responseBody -> {
-                        DownloadTool.saveFile(0, responseBody.byteStream()
-                                , fileStoreDir, fileName);
-                        return responseBody;
-                    });
+            Log.e(TAG, "downloadFile: null");
+            downloadInfo = new DownloadInfo();
+            downloadInfo.setSavePath(fileStoreDir);
+            downloadInfo.setUrl(url);
+            downloadInfo.setContentLength(1);
+            responseBodyObservable = ApiServiceFactory.getDownloadApiService(downloadCallback, downloadInfo).download(url);
         } else {
-            responseBodyObservable = apiService.download("bytes=" + downloadInfo.getBytesReaded() + "-", downloadInfo.getUrl())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .map(responseBody -> {
-                        DownloadTool.saveFile(downloadInfo.getBytesReaded(), responseBody.byteStream()
-                                , fileStoreDir, fileName);
-                        Log.e(TAG, "getThreadDownload: 完成" + downloadInfo.getBytesReaded());
-                        return responseBody;
-                    });
+            Log.e(TAG, "downloadFile: no null");
+            responseBodyObservable = ApiServiceFactory.getDownloadApiService(downloadCallback, downloadInfo).download("bytes=" + downloadInfo.getBytesReaded() + "-", downloadInfo.getUrl());
         }
 
-        responseBodyObservable.subscribe(new Observer<ResponseBody>() {
-            Disposable d;
+        DownloadInfo finalDownloadInfo = downloadInfo;
+        responseBodyObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map(responseBody -> {
+                    DownloadTool.saveFile(finalDownloadInfo.getBytesReaded(), responseBody.byteStream()
+                                , fileStoreDir, fileName);
+                    Log.e(TAG, "getThreadDownload: 完成" + finalDownloadInfo.getBytesReaded());
+                        return responseBody;
+                })
+
+                .subscribe(new Observer<ResponseBody>() {
+                    Disposable d;
                         @Override
                         public void onSubscribe(Disposable d) {
                             Log.e(TAG, "onSubscribe: ");
@@ -90,14 +93,22 @@ public class NetClass {
                         @Override
                         public void onComplete() {
                             d.dispose();
+                            //下载完成,则清空保存的下载状态
+                            SPTool.remove(url);
                             Log.e(TAG, "onComplete: ");
                         }
                     });
 
     }
 
+    /**
+     * 读取数据库里上次下载的进度,如果没有下载,就为null
+     *
+     * @param url
+     * @return
+     */
     private DownloadInfo getDownloadInfo(String url) {
-        return mInfo;
+        return SPTool.getObject(url, DownloadInfo.class);
     }
 
 

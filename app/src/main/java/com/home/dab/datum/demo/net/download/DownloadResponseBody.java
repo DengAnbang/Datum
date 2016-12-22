@@ -1,7 +1,5 @@
 package com.home.dab.datum.demo.net.download;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -19,9 +17,11 @@ import okio.Okio;
 public class DownloadResponseBody extends ResponseBody {
     private Response mResponse;
     private IDownloadCallback mDownloadCallback;
-    public DownloadResponseBody(Response response, IDownloadCallback downloadCallback) {
+    private DownloadInfo downloadInfo;
+    public DownloadResponseBody(Response response, IDownloadCallback downloadCallback,DownloadInfo downloadInfo) {
         mResponse = response;
         mDownloadCallback = downloadCallback;
+        this.downloadInfo = downloadInfo;
     }
 
     @Override
@@ -36,8 +36,6 @@ public class DownloadResponseBody extends ResponseBody {
 
     @Override
     public BufferedSource source() {
-        Log.e(TAG, "source: " );
-
         return Okio.buffer(new ForwardingSource(mResponse.body().source()) {
             long bytesReaded = 0;//下載的进度
             @Override
@@ -46,14 +44,16 @@ public class DownloadResponseBody extends ResponseBody {
                 try {
                     bytesRead = super.read(sink, byteCount);
                     bytesReaded += bytesRead == -1 ? 0 : bytesRead;
-                    Log.e(TAG, "read: " + bytesReaded + "****" + contentLength());
+//                    Log.e(TAG, "read: " + bytesReaded + "****" + contentLength());
                     if (mDownloadCallback != null) {
-                        mDownloadCallback.onProgressChange(bytesReaded,contentLength());
+                        mDownloadCallback.onProgressChange(downloadInfo.getBytesReaded()+bytesReaded,downloadInfo.getBytesReaded()+contentLength());
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "read: 结束"+bytesReaded );
+//                    Log.e(TAG, "read: 结束"+bytesReaded );
                     if (mDownloadCallback != null) {
-                        mDownloadCallback.onPauseDownload(bytesReaded,contentLength());
+                        downloadInfo.setBytesReaded(bytesReaded);
+                        downloadInfo.setContentLength(contentLength());
+                        mDownloadCallback.onPauseDownload(downloadInfo);
                     }
 
                 }

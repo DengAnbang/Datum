@@ -49,6 +49,8 @@
         </activity>
         <activity android:name=".demo.changeIcon.ChangeIcon">
         </activity>
+        <activity android:name=".demo.shoppingcart.ShoppingMainActivity">
+        </activity>
     </application>
 
 </manifest>

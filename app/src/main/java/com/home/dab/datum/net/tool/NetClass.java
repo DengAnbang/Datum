@@ -1,10 +1,10 @@
-package com.home.dab.datum.demo.net.tool;
+package com.home.dab.datum.net.tool;
 
 import android.util.Log;
 
-import com.home.dab.datum.demo.net.download.DownloadInfo;
-import com.home.dab.datum.demo.net.download.DownloadTool;
-import com.home.dab.datum.demo.net.download.IDownloadCallback;
+import com.home.dab.datum.demo.download.download.DownloadInfo;
+import com.home.dab.datum.demo.download.download.DownloadTool;
+import com.home.dab.datum.demo.download.download.IDownloadCallback;
 import com.home.dab.datum.tool.SPTool;
 
 import io.reactivex.Observable;

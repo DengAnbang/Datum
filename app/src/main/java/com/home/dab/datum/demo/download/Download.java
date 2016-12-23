@@ -7,9 +7,9 @@ import android.view.View;
 
 import com.home.dab.datum.Constant;
 import com.home.dab.datum.R;
-import com.home.dab.datum.demo.net.download.DownloadInfo;
-import com.home.dab.datum.demo.net.tool.NetClass;
-import com.home.dab.datum.demo.net.download.IDownloadCallback;
+import com.home.dab.datum.demo.download.download.DownloadInfo;
+import com.home.dab.datum.net.tool.NetClass;
+import com.home.dab.datum.demo.download.download.IDownloadCallback;
 import com.home.dab.datum.tool.SPTool;
 
 

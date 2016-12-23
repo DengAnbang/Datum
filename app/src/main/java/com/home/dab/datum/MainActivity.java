@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.home.dab.datum.demo.changeIcon.ChangeIcon;
 import com.home.dab.datum.demo.download.Download;
+import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +25,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, Download.class));
     }
 
+    /**
+     * 更换图标
+     *
+     * @param view
+     */
     public void changeIcon(View view) {
         startActivity(new Intent(MainActivity.this, ChangeIcon.class));
+    }
+
+    public void shoppingCart(View view) {
+        startActivity(new Intent(MainActivity.this, ShoppingMainActivity.class));
     }
 }

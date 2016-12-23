@@ -1,10 +1,10 @@
-package com.home.dab.datum.demo.net.tool;
+package com.home.dab.datum.net.tool;
 
 import android.util.Log;
 
-import com.home.dab.datum.demo.net.download.DownloadInfo;
-import com.home.dab.datum.demo.net.download.DownloadResponseBody;
-import com.home.dab.datum.demo.net.download.IDownloadCallback;
+import com.home.dab.datum.demo.download.download.DownloadInfo;
+import com.home.dab.datum.demo.download.download.DownloadResponseBody;
+import com.home.dab.datum.demo.download.download.IDownloadCallback;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;

@@ -45,6 +45,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:gravity="bottom"
             android:id="@+id/tv_refresh_hint"
             android:layout_width="match_parent"
             android:layout_height="100dp"

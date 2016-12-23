@@ -33,14 +33,6 @@ public class StoreFragment extends Fragment {
     private RecyclerView mRecyclerNavigation, mRecyclerCommodity;
     private CommodityApt mCommodityApt;
 
-    public RecyclerView getRecyclerNavigation() {
-        return mRecyclerNavigation;
-    }
-
-    public RecyclerView getRecyclerCommodity() {
-        return mRecyclerCommodity;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

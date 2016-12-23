@@ -37,4 +37,5 @@ dependencies {
     compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'ca.barrenechea.header-decor:header-decor:0.2.8'
+    compile 'com.android.support:design:25.0.0'
 }

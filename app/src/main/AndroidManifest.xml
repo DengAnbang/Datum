@@ -51,6 +51,8 @@
         </activity>
         <activity android:name=".demo.shoppingcart.ShoppingMainActivity">
         </activity>
+        <activity android:name=".demo.coordinatorLayout.CoordinatorLayoutTest">
+        </activity>
     </application>
 
 </manifest>

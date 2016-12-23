@@ -8,6 +8,10 @@
     android:layout_height="match_parent"
     tools:context=".demo.download.Download">
 
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <Button android:onClick="download"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,4 +21,10 @@
         android:layout_height="wrap_content"
         android:onClick="pause"
         android:text="暂停"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="install"
+        android:text="安装"/>
 </LinearLayout>

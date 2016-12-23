@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.home.dab.datum.R;
 import com.home.dab.datum.demo.shoppingcart.Data;
+import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 import com.home.dab.datum.demo.shoppingcart.adapter.CommodityApt;
 import com.home.dab.datum.demo.shoppingcart.adapter.NavigationApt;
 
@@ -23,6 +24,7 @@ import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
 
 /**
  * Created by DAB on 2016/12/13 13:54.
+ *
  */
 
 public class StoreFragment extends Fragment {
@@ -30,6 +32,14 @@ public class StoreFragment extends Fragment {
     private View mView;
     private RecyclerView mRecyclerNavigation, mRecyclerCommodity;
     private CommodityApt mCommodityApt;
+
+    public RecyclerView getRecyclerNavigation() {
+        return mRecyclerNavigation;
+    }
+
+    public RecyclerView getRecyclerCommodity() {
+        return mRecyclerCommodity;
+    }
 
     @Nullable
     @Override
@@ -89,6 +99,9 @@ public class StoreFragment extends Fragment {
                 }
             }
         });
+        ShoppingMainActivity activity = (ShoppingMainActivity) getActivity();
+        activity.getRefreshView().setConflictView(mRecyclerCommodity);
+        activity.getRefreshView().setConflictView(mRecyclerNavigation);
     }
 
     private void initView(View view) {

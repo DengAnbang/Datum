@@ -38,10 +38,23 @@
             android:layout_weight="1"
             android:text="页面三"/>
     </LinearLayout>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    <com.home.dab.datum.demo.view.RefreshView
+        android:id="@+id/rv_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_refresh_hint"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="的撒大大的"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+    </com.home.dab.datum.demo.view.RefreshView>
+
 </LinearLayout>

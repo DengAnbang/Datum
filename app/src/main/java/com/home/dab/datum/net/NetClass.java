@@ -1,10 +1,12 @@
-package com.home.dab.datum.net.tool;
+package com.home.dab.datum.net;
 
 import android.util.Log;
 
 import com.home.dab.datum.demo.download.download.DownloadInfo;
 import com.home.dab.datum.demo.download.download.DownloadTool;
 import com.home.dab.datum.demo.download.download.IDownloadCallback;
+import com.home.dab.datum.net.tool.ApiServiceFactory;
+import com.home.dab.datum.net.tool.ResultContent;
 import com.home.dab.datum.tool.SPTool;
 
 import io.reactivex.Observable;
@@ -94,7 +96,7 @@ public class NetClass {
                         public void onComplete() {
                             d.dispose();
                             //下载完成,则清空保存的下载状态
-                            SPTool.remove(url);
+                            SPTool.removeObject(url);
                             Log.e(TAG, "onComplete: ");
                         }
                     });

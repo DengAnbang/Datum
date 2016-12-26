@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_coordinator_layout_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.home.dab.datum.demo.coordinatorLayout.CoordinatorLayoutTest">
+    android:orientation="vertical"
+    tools:context=".demo.md.coordinatorLayout.CoordinatorLayoutTest">
 
-</RelativeLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="simple"
+        android:text="最简单的例子"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="hideHead"
+        android:text="隐藏头布局"/>
+</LinearLayout>

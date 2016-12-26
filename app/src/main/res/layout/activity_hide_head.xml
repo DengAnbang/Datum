@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_hide_head"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.home.dab.datum.demo.md.coordinatorLayout.head.HideHead">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentScrim="@color/colorPrimary">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:collapsedTitleGravity="center"
+                app:expandedTitleGravity="center|bottom"
+                app:expandedTitleMarginEnd="30dp"
+                app:expandedTitleMarginStart="30dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="1"
+                app:title="这是标题">
+
+                <ImageView
+                    android:id="@+id/main.backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher"
+                    app:layout_collapseMode="parallax"/>
+
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <!--这是一个 toolbar不透明的-->
+        <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp">-->
+
+        <!--<android.support.design.widget.CollapsingToolbarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--app:contentScrim="@color/colorPrimary"-->
+        <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@mipmap/ic_launcher"/>-->
+
+        <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/tool_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"/>-->
+        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+        <!--</android.support.design.widget.AppBarLayout>-->
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/yinyan_content"/>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

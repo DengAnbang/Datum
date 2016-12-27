@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.home.dab.datum.R;
 import com.home.dab.datum.demo.md.coordinatorLayout.head.HideHead;
+import com.home.dab.datum.demo.md.coordinatorLayout.recycler.RecyclerViewAdd;
 import com.home.dab.datum.demo.md.coordinatorLayout.simple.SimpleCL;
 
 public class CoordinatorLayoutTest extends AppCompatActivity {
@@ -24,5 +25,9 @@ public class CoordinatorLayoutTest extends AppCompatActivity {
 
     public void hideHead(View view) {
         startActivity(new Intent(CoordinatorLayoutTest.this, HideHead.class));
+    }
+
+    public void recycler(View view) {
+        startActivity(new Intent(CoordinatorLayoutTest.this, RecyclerViewAdd.class));
     }
 }

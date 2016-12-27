@@ -3,6 +3,8 @@ package com.home.dab.datum.demo.view;
 import android.content.Context;
 import android.graphics.RectF;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
@@ -55,6 +57,30 @@ public class RefreshView extends ViewGroup {
             mConflictViews = new ArrayList<>();
         }
         mConflictViews.add(conflictView);
+    }
+
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putFloat("mHeadHeight",mHeadHeight);
+        bundle.putFloat("mHeadWidth",mHeadWidth);
+        bundle.putFloat("mContentHeight",mContentHeight);
+        bundle.putFloat("mContentWidth",mContentWidth);
+        bundle.putFloat("mStartRefreshDistance",mStartRefreshDistance);
+        bundle.putInt("state",state);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+        Bundle bundle = (Bundle) state;
+        mHeadHeight=bundle.getFloat("mHeadHeight",mHeadHeight);
+        mHeadWidth=bundle.getFloat("mHeadWidth",mHeadWidth);
+        mContentHeight=bundle.getFloat("mContentHeight",mContentHeight);
+        mContentWidth=bundle.getFloat("mContentWidth",mContentWidth);
+        mStartRefreshDistance=bundle.getFloat("mStartRefreshDistance",mStartRefreshDistance);
     }
 
     public RefreshView(Context context) {

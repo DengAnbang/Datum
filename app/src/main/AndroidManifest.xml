@@ -57,6 +57,8 @@
         </activity>
         <activity android:name=".demo.md.coordinatorLayout.head.HideHead">
         </activity>
+        <activity android:name=".demo.md.coordinatorLayout.recycler.RecyclerViewAdd">
+        </activity>
     </application>
 
 </manifest>

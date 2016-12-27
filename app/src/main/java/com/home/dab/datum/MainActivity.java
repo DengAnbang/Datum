@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.home.dab.datum.demo.changeIcon.ChangeIcon;
 import com.home.dab.datum.demo.download.Download;
-import com.home.dab.datum.demo.md.coordinatorLayout.CoordinatorLayoutTest;
+import com.home.dab.datum.demo.md.MaterialDesign;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +40,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void md(View view) {
-        startActivity(new Intent(MainActivity.this, CoordinatorLayoutTest.class));
+        startActivity(new Intent(MainActivity.this, MaterialDesign.class));
     }
 }

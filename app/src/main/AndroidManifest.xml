@@ -59,6 +59,10 @@
         </activity>
         <activity android:name=".demo.md.coordinatorLayout.recycler.RecyclerViewAdd">
         </activity>
+        <activity android:name=".demo.md.MaterialDesign">
+        </activity>
+        <activity android:name=".demo.md.textInputLayout.TextInputLayout">
+        </activity>
     </application>
 
 </manifest>

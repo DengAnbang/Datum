@@ -39,7 +39,7 @@
             android:text="页面三"/>
     </LinearLayout>
 
-    <com.home.dab.datum.demo.view.RefreshView
+    <com.home.dab.datum.view.RefreshView
         android:id="@+id/rv_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -56,6 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v4.view.ViewPager>
-    </com.home.dab.datum.demo.view.RefreshView>
+    </com.home.dab.datum.view.RefreshView>
 
 </LinearLayout>

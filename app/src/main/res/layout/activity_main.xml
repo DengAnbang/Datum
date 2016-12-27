@@ -30,4 +30,10 @@
         android:layout_height="wrap_content"
         android:onClick="md"
         android:text="MD"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="java2js"
+        android:text="java2js"/>
 </LinearLayout>

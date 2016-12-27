@@ -1,4 +1,4 @@
-package com.home.dab.datum.demo.view;
+package com.home.dab.datum.view;
 
 import android.content.Context;
 import android.graphics.RectF;

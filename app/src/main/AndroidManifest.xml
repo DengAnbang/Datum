@@ -63,6 +63,8 @@
         </activity>
         <activity android:name=".demo.md.textInputLayout.TextInputLayout">
         </activity>
+        <activity android:name=".demo.java2js.Java2Js">
+        </activity>
     </application>
 
 </manifest>

@@ -25,7 +25,7 @@ public class TextInputLayout extends AppCompatActivity {
 
     public void sure(View view) {
         if (mTextInputEditText.getText().toString().length() != 11) {
-            mTextInputLayout.setError("dadasda");
+            mTextInputLayout.setError("格式错误");
         } else {
             mTextInputLayout.setErrorEnabled(false);
         }

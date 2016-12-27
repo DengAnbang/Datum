@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.home.dab.datum.demo.changeIcon.ChangeIcon;
 import com.home.dab.datum.demo.download.Download;
+import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
@@ -41,5 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void md(View view) {
         startActivity(new Intent(MainActivity.this, MaterialDesign.class));
+    }
+
+    public void java2js(View view) {
+        startActivity(new Intent(MainActivity.this, Java2Js.class));
     }
 }

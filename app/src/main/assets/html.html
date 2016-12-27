@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+function upperCase(){
+    var x=document.getElementById("fname");
+    var string =x.value.toUpperCase();
+    <!--回调java中的的upperCaseJava接口里面的upperCaseJava方法-->
+    window.upperCaseJava.upperCaseJava(string);
+}
+
+    </script>
+</head>
+<body>
+
+请输入英文字符：<input type="text" id="fname" onchange="myFunction()">
+<p>将输入文本转换为大写的函数。</p>
+<button onclick="upperCase()">点击这里</button>
+</body>
+</html>

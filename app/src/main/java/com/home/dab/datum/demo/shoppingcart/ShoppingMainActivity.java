@@ -11,7 +11,7 @@ import com.home.dab.datum.demo.shoppingcart.adapter.ViewPagerApt;
 import com.home.dab.datum.demo.shoppingcart.fragment.StoreFragment;
 import com.home.dab.datum.demo.shoppingcart.fragment.TestFragment;
 import com.home.dab.datum.demo.shoppingcart.fragment.TestFragment2;
-import com.home.dab.datum.demo.view.RefreshView;
+import com.home.dab.datum.view.RefreshView;
 
 import java.util.ArrayList;
 import java.util.List;

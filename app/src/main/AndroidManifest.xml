@@ -65,6 +65,8 @@
         </activity>
         <activity android:name=".demo.java2js.Java2Js">
         </activity>
+        <activity android:name=".demo.crypto.Crypto">
+        </activity>
     </application>
 
 </manifest>

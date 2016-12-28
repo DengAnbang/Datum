@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.home.dab.datum.demo.changeIcon.ChangeIcon;
+import com.home.dab.datum.demo.crypto.Crypto;
 import com.home.dab.datum.demo.download.Download;
 import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
@@ -46,5 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void java2js(View view) {
         startActivity(new Intent(MainActivity.this, Java2Js.class));
+    }
+
+    public void crypto(View view) {
+        startActivity(new Intent(MainActivity.this, Crypto.class));
     }
 }

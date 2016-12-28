@@ -36,4 +36,10 @@
         android:layout_height="wrap_content"
         android:onClick="java2js"
         android:text="java2js"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="crypto"
+        android:text="加密解密"/>
 </LinearLayout>

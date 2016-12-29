@@ -67,6 +67,8 @@
         </activity>
         <activity android:name=".demo.crypto.Crypto">
         </activity>
+        <activity android:name=".demo.recyclerDemo.RecyclerDemo">
+        </activity>
     </application>
 
 </manifest>

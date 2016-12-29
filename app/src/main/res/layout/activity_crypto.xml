@@ -5,8 +5,9 @@
     android:id="@+id/activity_crypto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.home.dab.datum.demo.crypto.Crypto"
     android:orientation="vertical"
-    tools:context="com.home.dab.datum.demo.crypto.Crypto">
+    android:baselineAligned="false">
 
     <EditText
         android:id="@+id/et_crypto"

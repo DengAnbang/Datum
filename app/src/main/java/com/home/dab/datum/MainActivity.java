@@ -10,6 +10,7 @@ import com.home.dab.datum.demo.crypto.Crypto;
 import com.home.dab.datum.demo.download.Download;
 import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
+import com.home.dab.datum.demo.recyclerDemo.RecyclerDemo;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,5 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void crypto(View view) {
         startActivity(new Intent(MainActivity.this, Crypto.class));
+    }
+
+    public void recyclerView(View view) {
+        startActivity(new Intent(MainActivity.this, RecyclerDemo.class));
     }
 }

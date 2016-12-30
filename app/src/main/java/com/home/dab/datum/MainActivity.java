@@ -14,7 +14,6 @@ import com.home.dab.datum.demo.recyclerDemo.RecyclerDemo;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

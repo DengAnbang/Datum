@@ -1,35 +1,74 @@
 package com.home.dab.datum.tool.rxTool;
 
-import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.HashMap;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by DAB on 2016/12/29 09:13.
+ * 订阅完成可以使用CompositeDisposable或者使用四个参数的那个取消订阅
  */
 
-public class RxBus<T> {
-    //所有事件的CODE
-    public static final int TAP = 1; //点击事件
-    public static final int OTHER = 21; //其它事件
+public class RxBus {
+    private HashMap<Object, Subject> maps;
+    private static RxBus instance;
 
-    //枚举
-    @IntDef({TAP, OTHER})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface EventCode {}
-
-
-    public @RxBus.EventCode int code;
-    public T content;
-
-    public static <O> RxBus<O> setContent(O t) {
-        RxBus<O> events = new RxBus<>();
-        events.content = t;
-        return events;
+    private RxBus() {
+        maps = new HashMap<>();
     }
 
-    public <T> T getContent() {
-        return (T) content;
+    public static RxBus get() {
+        if (instance == null) {
+            synchronized (RxBus.class) {
+                if (instance == null) {
+                    instance = new RxBus();
+                }
+            }
+        }
+        return instance;
     }
+
+    /**
+     *  如果发生错误,就会自动取消订阅
+     * @param tag
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Observable<T> register(@NonNull Object tag, @NonNull Class<T> clazz) {
+        Subject subject;
+        if (maps.containsKey(tag)) {
+            subject = maps.get(tag);
+        } else {
+            subject = PublishSubject.<T>create();
+            maps.put(tag, subject);
+        }
+        return subject.ofType(clazz);
+    }
+
+    /**
+     * 不是必须的
+     *
+     * @param tag
+     */
+    public void unregister(@NonNull Object tag) {
+        if (maps.containsKey(tag)) {
+            maps.remove(tag);
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void post(@NonNull Object tag, @NonNull Object o) {
+        if (maps.containsKey(tag)) {
+            Subject subject = maps.get(tag);
+            subject.onNext(o);
+        }
+    }
+
 }

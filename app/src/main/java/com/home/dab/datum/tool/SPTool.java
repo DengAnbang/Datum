@@ -1,5 +1,6 @@
 package com.home.dab.datum.tool;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -12,16 +13,21 @@ import java.util.Objects;
 
 /**
  * Created by DAB on 2016/12/20 14:49.
+ *
  */
 
 public class SPTool {
     public static final String FILE_NAME = "share_data";
-
+    //这里用Application不然会内存泄漏
     private static Context sContext;
     private static Gson sGson;
 
     public static void init(Context context) {
-        sContext = context;
+        if (context instanceof Application) {
+            sContext = context;
+        } else {
+            throw new RuntimeException("需要用Application初始化SPTool");
+        }
     }
 
     private static Context getContext() {

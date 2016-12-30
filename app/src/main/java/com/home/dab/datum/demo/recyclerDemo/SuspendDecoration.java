@@ -11,7 +11,7 @@ import android.view.View;
 
 /**
  * Created by DAB on 2016/12/29 13:25.
- * 自定义的RecyclerView的ItemDecoration,实现悬浮挤动的效果
+ * 自定义的RecyclerView的ItemDecoration,实现挤动悬浮的效果
  */
 
 public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {

@@ -62,7 +62,6 @@ public class RxBus {
         }
     }
 
-
     @SuppressWarnings("unchecked")
     public void post(@NonNull Object tag, @NonNull Object o) {
         if (maps.containsKey(tag)) {

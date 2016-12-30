@@ -24,19 +24,18 @@ public class RecyclerDemo extends AppCompatActivity {
             demoBeen.add(new DemoBean(i + "", i));
         }
         DemoApt demoApt = new DemoApt(this, demoBeen);
-//        TextView textView = new TextView(this);
-//        textView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        textView.setText("hhhhh");
-//        textView.setBackgroundColor(Color.BLUE);
-
-        mRecyclerDemo.addItemDecoration(new SuspendDecoration() {
+        mRecyclerDemo.setAdapter(demoApt);
+        mRecyclerDemo.addItemDecoration(new SuspendDecoration(100, 50, SuspendDecoration.TITLE_GRAVITY_CENTER) {
             @Override
-            boolean isFirstInGroup(int priorGroupId, int nowGroupId) {
+            boolean isNewGroup(int priorGroupId, int nowGroupId) {
                 return demoBeen.get(priorGroupId).getNum() != demoBeen.get(nowGroupId).getNum();
+            }
+            @Override
+            String showTitle(int position) {
+                return demoBeen.get(position).getNum() + "";
             }
         });
 
-        mRecyclerDemo.setAdapter(demoApt);
     }
 
 

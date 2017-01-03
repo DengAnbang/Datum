@@ -11,8 +11,14 @@ import com.home.dab.datum.demo.download.Download;
 import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
 import com.home.dab.datum.demo.recyclerDemo.RecyclerDemo;
+import com.home.dab.datum.demo.share.ShareActivity;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
 
+/**
+ * 微信:
+ * AppID：wxdd736775d8c546a2
+ * AppSecret:cb251fe019716641c7c70e8e40619957
+ */
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void recyclerView(View view) {
         startActivity(new Intent(MainActivity.this, RecyclerDemo.class));
+    }
+
+    public void share(View view) {
+        startActivity(new Intent(MainActivity.this, ShareActivity.class));
     }
 }

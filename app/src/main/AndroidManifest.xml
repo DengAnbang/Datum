@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.home.dab.datum">
-    <!--39002eff7e33b02cb196c24299af9ce7-->
+
+    <!-- 39002eff7e33b02cb196c24299af9ce7 -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -69,6 +70,15 @@
         </activity>
         <activity android:name=".demo.recyclerDemo.RecyclerDemo">
         </activity>
+        <activity android:name=".demo.share.ShareActivity">
+        </activity>
+
+        <activity
+            android:name="com.home.dab.datum.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

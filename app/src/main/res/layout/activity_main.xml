@@ -48,4 +48,10 @@
         android:layout_height="wrap_content"
         android:onClick="recyclerView"
         android:text="recyler的练习"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="share"
+        android:text="分享的练习"/>
 </LinearLayout>

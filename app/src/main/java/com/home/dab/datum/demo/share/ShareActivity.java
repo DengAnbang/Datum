@@ -1,5 +1,6 @@
 package com.home.dab.datum.demo.share;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,8 +14,12 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.home.dab.datum.R;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
 
 public class ShareActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ShareActivity";
@@ -102,8 +107,59 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.ib_pop_share_weibo:
                 share(SHARE_MEDIA.SINA);
-//                UmengTool.getSignature(this);
                 break;
         }
+    }
+
+    public void QQLogin(View view) {
+//        UMShareAPI.get(this).doOauthVerify(this, SHARE_MEDIA.QQ, authListener);
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.QQ, mUMAuthListener);
+    }
+
+    public void SINALogin(View view) {
+        UMShareAPI.get(this).doOauthVerify(this, SHARE_MEDIA.SINA, mUMAuthListener);
+    }
+
+    public void WeiXinLogin(View view) {
+        UMShareAPI.get(this).doOauthVerify(this, SHARE_MEDIA.WEIXIN, mUMAuthListener);
+    }
+
+    UMAuthListener mUMAuthListener = new UMAuthListener() {
+        @Override
+        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            Log.e(TAG, "onComplete: " + i);
+            Toast.makeText(ShareActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+            Log.e(TAG, "onError: " + i);
+            Toast.makeText(ShareActivity.this, "授权失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media, int i) {
+            Log.e(TAG, "onCancel: " + i);
+            Toast.makeText(ShareActivity.this, "取消授权", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        UMShareAPI.get(this).onSaveInstanceState(outState);
     }
 }

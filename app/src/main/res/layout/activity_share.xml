@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_share"
@@ -16,4 +17,22 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_share"
         android:text="分享文字"/>
-</RelativeLayout>
+
+    <Button
+        android:onClick="QQLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QQ登录"/>
+
+    <Button
+        android:onClick="SINALogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="微博登录"/>
+
+    <Button
+        android:onClick="WeiXinLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="微信登录"/>
+</LinearLayout>

@@ -46,7 +46,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -63,4 +62,7 @@ dependencies {
     compile files('libs/umeng_social_net.jar')
     compile files('libs/SocialSDK_WeiXin_Full.jar')
     compile files('libs/libammsdk.jar')
+    compile files('libs/SocialSDK_QQ_Simplify.jar')
+    compile files('libs/SocialSDK_Sina_Simplify.jar')
+    compile files('libs/SocialSDK_Sina_Full.jar')
 }

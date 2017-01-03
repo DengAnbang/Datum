@@ -89,8 +89,20 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
                 share();
                 break;
             case R.id.ib_pop_share_weixin:
-                Log.e(TAG, "onClick: " );
                 share(SHARE_MEDIA.WEIXIN);
+                break;
+            case R.id.ib_pop_share_pyq:
+                share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                break;
+            case R.id.ib_pop_share_qq:
+                share(SHARE_MEDIA.QQ);
+                break;
+            case R.id.ib_pop_share_qqkj:
+                share(SHARE_MEDIA.QZONE);
+                break;
+            case R.id.ib_pop_share_weibo:
+                share(SHARE_MEDIA.SINA);
+//                UmengTool.getSignature(this);
                 break;
         }
     }

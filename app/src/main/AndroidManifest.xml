@@ -142,6 +142,8 @@
 
         <activity android:name=".demo.myView.MyView">
         </activity>
+        <activity android:name=".demo.okioTest.OkIo">
+        </activity>
     </application>
 
 </manifest>

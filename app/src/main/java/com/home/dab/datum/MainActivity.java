@@ -11,6 +11,7 @@ import com.home.dab.datum.demo.download.Download;
 import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
 import com.home.dab.datum.demo.myView.MyView;
+import com.home.dab.datum.demo.okioTest.OkIo;
 import com.home.dab.datum.demo.recyclerDemo.RecyclerDemo;
 import com.home.dab.datum.demo.share.ShareActivity;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
@@ -70,5 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void myView(View view) {
         startActivity(new Intent(MainActivity.this, MyView.class));
+    }
+
+    public void okio(View view) {
+        startActivity(new Intent(MainActivity.this, OkIo.class));
     }
 }

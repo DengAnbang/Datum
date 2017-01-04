@@ -60,4 +60,10 @@
         android:layout_height="wrap_content"
         android:onClick="myView"
         android:text="自定义的练习"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="okio"
+        android:text="okio的练习"/>
 </LinearLayout>

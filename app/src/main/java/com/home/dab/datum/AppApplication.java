@@ -40,6 +40,6 @@ public class AppApplication extends Application {
         PlatformConfig.setSinaWeibo(APP_KEY_SINA, APP_SECRET_SINA);
         Config.REDIRECT_URL = "http://sns.whalecloud.com";
 //        Config.REDIRECT_URL = "http://sns.whalecloud.com/sina2/calback";
-        Config.DEBUG = true;
+//        Config.DEBUG = true;
     }
 }

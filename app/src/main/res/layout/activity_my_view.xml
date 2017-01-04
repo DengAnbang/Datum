@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_my_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.home.dab.datum.demo.myView.MyView">
+
+    <com.home.dab.datum.view.SlideButton
+        android:id="@+id/sb"
+        android:layout_width="800px"
+        android:layout_height="400px"
+        android:background="@color/colorAccent">
+        <!--这个是默认的view-->
+        <Button
+            android:layout_width="90px"
+            android:layout_height="90px"
+            android:background="@mipmap/btn_me_addin0"/>
+        <!--这个是左边的view-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/btn_me_addintext0"
+            android:drawablePadding="30px"
+            android:gravity="center"
+            android:text="插入文字"
+            android:textColor="@color/colorText"
+            android:textSize="42px"
+            android:visibility="invisible"/>
+        <!--这个是右边的view-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/btn_me_addinimage0"
+            android:drawablePadding="30px"
+            android:gravity="center"
+            android:text="插入图片"
+            android:textColor="@color/colorText"
+            android:textSize="42px"
+            android:visibility="invisible"/>
+    </com.home.dab.datum.view.SlideButton>
+
+    <Button
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="start"
+        android:text="开始"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="close"
+        android:text="关闭"/>
+</LinearLayout>

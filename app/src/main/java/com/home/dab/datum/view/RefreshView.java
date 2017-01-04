@@ -132,8 +132,8 @@ public class RefreshView extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int measureHeigth = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(measureWidth, measureHeigth);
+        int measureHeight = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(measureWidth, measureHeight);
 
         for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
@@ -152,9 +152,9 @@ public class RefreshView extends ViewGroup {
             if (params.height > 0) {
                 heightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
             } else if (params.height == MATCH_PARENT) {
-                heightSpec = MeasureSpec.makeMeasureSpec(measureHeigth, MeasureSpec.EXACTLY);
+                heightSpec = MeasureSpec.makeMeasureSpec(measureHeight, MeasureSpec.EXACTLY);
             } else if (params.height == WRAP_CONTENT) {
-                heightSpec = MeasureSpec.makeMeasureSpec(measureWidth, MeasureSpec.AT_MOST);
+                heightSpec = MeasureSpec.makeMeasureSpec(measureHeight, MeasureSpec.AT_MOST);
             }
             v.measure(widthSpec, heightSpec);
 

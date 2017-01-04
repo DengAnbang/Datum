@@ -33,6 +33,7 @@ public class AESUtls {
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] enBytes = Base64.decode(cipherText, Base64.DEFAULT);
         return cipher.doFinal(enBytes);
+
     }
 
     public static byte[] decrypt(SecretKeySpec skeySpec, String cipherText) throws Exception {

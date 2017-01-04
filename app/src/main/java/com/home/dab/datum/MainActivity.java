@@ -10,6 +10,7 @@ import com.home.dab.datum.demo.crypto.Crypto;
 import com.home.dab.datum.demo.download.Download;
 import com.home.dab.datum.demo.java2js.Java2Js;
 import com.home.dab.datum.demo.md.MaterialDesign;
+import com.home.dab.datum.demo.myView.MyView;
 import com.home.dab.datum.demo.recyclerDemo.RecyclerDemo;
 import com.home.dab.datum.demo.share.ShareActivity;
 import com.home.dab.datum.demo.shoppingcart.ShoppingMainActivity;
@@ -65,5 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void share(View view) {
         startActivity(new Intent(MainActivity.this, ShareActivity.class));
+    }
+
+    public void myView(View view) {
+        startActivity(new Intent(MainActivity.this, MyView.class));
     }
 }

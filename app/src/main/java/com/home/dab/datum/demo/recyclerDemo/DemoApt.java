@@ -1,5 +1,9 @@
 package com.home.dab.datum.demo.recyclerDemo;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +20,14 @@ import java.util.List;
  */
 
 public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
+    private static final String TAG = "DemoApt";
     private List<DemoBean> mDemoBeen;
     private LayoutInflater mLayoutInflater;
-
+    private int mSelectPosition;
     public DemoApt(Context context, List<DemoBean> demoBeen) {
         mDemoBeen = demoBeen;
         mLayoutInflater = LayoutInflater.from(context);
+        mSelectPosition = -1;
     }
 
     @Override
@@ -32,6 +38,23 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mTextView.setText(mDemoBeen.get(position).getName());
+//        holder.mTvDetails.setVisibility(View.VISIBLE);
+        //通过数据的的标志来打开和隐藏
+        holder.mTvDetails.setVisibility(mSelectPosition == position ? View.VISIBLE : View.GONE);
+        holder.mTvDetails.setText("sadsadas\ndsadasda\ndsfsdfsd\n");
+        holder.mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.mTvDetails.getVisibility() == View.VISIBLE) {
+                    closeItemDetails(holder.mTvDetails);
+                } else {
+                    // TODO: 2017/1/5  这里需要手动测量宽高,不然下面获取的就为0
+                    holder.mTvDetails.measure(holder.mTvDetails.getMeasuredWidthAndState(), holder.mTvDetails.getMeasuredHeightAndState());
+                    openItemDetails(holder.mTvDetails);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -41,10 +64,56 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-
+        TextView mTvDetails;
+        View itemView;
         public ViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             mTextView = (TextView) itemView.findViewById(R.id.tv_item_demo);
+            mTvDetails = (TextView) itemView.findViewById(R.id.tv_details);
         }
     }
+
+    private void openItemDetails(View detailsView) {
+        int measuredHeight = detailsView.getMeasuredHeight();
+        detailsView.setVisibility(View.VISIBLE);
+        ObjectAnimator leftViewScaleX = ObjectAnimator.ofFloat(detailsView, "scaleY", 0f, 1f);
+        leftViewScaleX.setDuration(300).start();
+        leftViewScaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedValue = Float.parseFloat(animation.getAnimatedValue().toString());
+                ViewGroup.LayoutParams layoutParams = detailsView.getLayoutParams();
+                layoutParams.height = (int) (measuredHeight * animatedValue);
+                detailsView.setLayoutParams(layoutParams);
+            }
+        });
+    }
+
+
+    private void closeItemDetails(View detailsView) {
+        int measuredHeight = detailsView.getMeasuredHeight();
+        ObjectAnimator lastOpenViewScaleX = ObjectAnimator.ofFloat(detailsView, "scaleY", 1f, 0f);
+        lastOpenViewScaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedValue = Float.parseFloat(animation.getAnimatedValue().toString());
+                ViewGroup.LayoutParams layoutParams = detailsView.getLayoutParams();
+                layoutParams.height = (int) (measuredHeight * animatedValue);
+                detailsView.setLayoutParams(layoutParams);
+            }
+        });
+        lastOpenViewScaleX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ViewGroup.LayoutParams layoutParams = detailsView.getLayoutParams();
+                layoutParams.height = measuredHeight;
+                detailsView.setLayoutParams(layoutParams);
+                detailsView.setVisibility(View.GONE);
+            }
+        });
+        lastOpenViewScaleX.setDuration(300).start();
+    }
+
+
 }

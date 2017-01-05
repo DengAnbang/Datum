@@ -8,7 +8,16 @@
     <TextView
         android:id="@+id/tv_item_demo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:gravity="center"
         android:text="1"/>
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="dasdasdasdasdd/nasdsadas\nsadasdasd"
+        android:transformPivotY="0dp"
+        android:visibility="invisible"/>
 </LinearLayout>

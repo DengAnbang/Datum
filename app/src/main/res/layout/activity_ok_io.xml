@@ -9,6 +9,7 @@
     tools:context="com.home.dab.datum.demo.okioTest.OkIo">
 
     <Button
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="write"

@@ -20,7 +20,8 @@ public class SlideButton extends ViewGroup {
     private int mLeftViewWidth, mLeftViewHeight;
     private int mInitialViewWidth, mInitialViewHeight;
     private boolean isOpen; // 是否是打开的状态
-
+    private int mDuration;//动画持续的时间
+    private int mFinallyDistance;//展开后两个View相距的距离(像素)
     public void setOnContentClickListener(OnContentClickListener onContentClickListener) {
         mOnContentClickListener = onContentClickListener;
     }
@@ -31,8 +32,13 @@ public class SlideButton extends ViewGroup {
 
     public SlideButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
+    public void init() {
+        mDuration = 300;
+        mFinallyDistance = 84;
+    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -100,27 +106,30 @@ public class SlideButton extends ViewGroup {
     private void animation(boolean open) {
 
         AnimatorSet animatorSet = new AnimatorSet();
-
+        //默认显示的view的动画
         ObjectAnimator initialViewScaleY = ObjectAnimator.ofFloat(mInitialView, "scaleY", open ? 1f : 0f, open ? 0f : 1f);
         ObjectAnimator initialViewScaleX = ObjectAnimator.ofFloat(mInitialView, "scaleX", open ? 1f : 0f, open ? 0f : 1f);
-
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mLeftView, "scaleY", open ? 0f : 1f, open ? 1f : 0f);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mLeftView, "scaleX", open ? 0f : 1f, open ? 1f : 0f);
-        ObjectAnimator moveIn = ObjectAnimator.ofFloat(mLeftView, "translationX"
-                , open ? (this.getMeasuredWidth() - mLeftViewWidth) / 2 : (this.getMeasuredWidth() - 84) / 2 - mLeftViewWidth
-                , open ? (this.getMeasuredWidth() - 84) / 2 - mLeftViewWidth : (this.getMeasuredWidth() - mLeftViewWidth) / 2);
-
-
-        ObjectAnimator PictureScaleY = ObjectAnimator.ofFloat(mRightView, "scaleY", open ? 0f : 1f, open ? 1f : 0f);
-        ObjectAnimator PictureScaleX = ObjectAnimator.ofFloat(mRightView, "scaleX", open ? 0f : 1f, open ? 1f : 0f);
-        ObjectAnimator PictureMoveIn = ObjectAnimator.ofFloat(mRightView, "translationX"
-                , open ? (this.getMeasuredWidth() - mLeftViewWidth) / 2 : (this.getMeasuredWidth() + 84) / 2
-                , open ? (this.getMeasuredWidth() + 84) / 2 : (this.getMeasuredWidth() - mLeftViewWidth) / 2);
-        animatorSet.play(initialViewScaleY).with(initialViewScaleX)
-                .with(scaleY).with(scaleX).with(moveIn)
-                .with(PictureScaleY).with(PictureScaleX).with(PictureMoveIn)
+        ObjectAnimator initialViewAlpha = ObjectAnimator.ofFloat(mInitialView, "alpha", open ? 1f : 0f, open ? 0f : 1f);
+        //左边的view的动画
+        ObjectAnimator leftViewScaleY = ObjectAnimator.ofFloat(mLeftView, "scaleY", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator leftViewScaleX = ObjectAnimator.ofFloat(mLeftView, "scaleX", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator leftViewAlpha = ObjectAnimator.ofFloat(mLeftView, "alpha", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator leftViewTranslationX = ObjectAnimator.ofFloat(mLeftView, "translationX"
+                , open ? (this.getMeasuredWidth() - mLeftViewWidth) / 2 : (this.getMeasuredWidth() - mFinallyDistance) / 2 - mLeftViewWidth
+                , open ? (this.getMeasuredWidth() - mFinallyDistance) / 2 - mLeftViewWidth : (this.getMeasuredWidth() - mLeftViewWidth) / 2);
+        //右边的view的动画
+        ObjectAnimator rightViewScaleY = ObjectAnimator.ofFloat(mRightView, "scaleY", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator rightViewScaleX = ObjectAnimator.ofFloat(mRightView, "scaleX", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator rightViewAlpha = ObjectAnimator.ofFloat(mRightView, "alpha", open ? 0f : 1f, open ? 1f : 0f);
+        ObjectAnimator rightViewTranslationX = ObjectAnimator.ofFloat(mRightView, "translationX"
+                , open ? (this.getMeasuredWidth() - mLeftViewWidth) / 2 : (this.getMeasuredWidth() + mFinallyDistance) / 2
+                , open ? (this.getMeasuredWidth() + mFinallyDistance) / 2 : (this.getMeasuredWidth() - mLeftViewWidth) / 2);
+        //组合动画
+        animatorSet.play(initialViewScaleY).with(initialViewScaleX).with(initialViewAlpha)
+                .with(leftViewScaleY).with(leftViewScaleX).with(leftViewTranslationX).with(leftViewAlpha)
+                .with(rightViewScaleY).with(rightViewScaleX).with(rightViewTranslationX).with(rightViewAlpha)
         ;
-        animatorSet.setDuration(300);
+        animatorSet.setDuration(mDuration);
         animatorSet.start();
         mInitialView.setEnabled(!open);
     }

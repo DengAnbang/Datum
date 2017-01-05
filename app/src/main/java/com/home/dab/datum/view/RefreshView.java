@@ -41,8 +41,8 @@ public class RefreshView extends ViewGroup {
 
     private ViewDragHelper mViewDragHelper;
 
-    private static final int PULL_DOWN_REFRESH = 1;//标志当前进入的刷新模式
-    private static final int PULL_UP_LOAD = 2;
+    private static final int PULL_DOWN_REFRESH = 1;
+    private static final int PULL_UP_LOAD = 2;//标志当前进入的刷新模式
     private int state = PULL_DOWN_REFRESH;
     //触摸获得Y的位置
     private float mTouchY;
@@ -108,14 +108,11 @@ public class RefreshView extends ViewGroup {
 //        if (childCount < 1 || childCount > 3) {
 //            throw new RuntimeException("里面只能含有一到三个子View!");
 //        }
-        if (childCount != 2) {
-            throw new RuntimeException("里面只能含有2个子View!");
+        if (childCount != 2 && childCount != 3) {
+            throw new RuntimeException("里面只能含有2到3个子View!");
         }
 //        int childCount = getChildCount();
         switch (childCount) {
-            case 1:
-                mContentView = getChildAt(0);
-                break;
             case 2:
                 mHeadView = getChildAt(0);
                 mContentView = getChildAt(1);
@@ -157,10 +154,7 @@ public class RefreshView extends ViewGroup {
                 heightSpec = MeasureSpec.makeMeasureSpec(measureHeight, MeasureSpec.AT_MOST);
             }
             v.measure(widthSpec, heightSpec);
-
         }
-
-
     }
 
 
@@ -189,20 +183,17 @@ public class RefreshView extends ViewGroup {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         mHeadView.layout(0, (int) (-mHeadHeight), (int) mHeadWidth, 0);
         mContentView.layout(0, 0, (int) mContentWidth, (int) mContentHeight);
+        mFootView.layout(0, (int) mContentHeight, (int) mFootWidth, (int) (mContentHeight + mFootHeight));
     }
 
-    boolean isConflict;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        isConflict = false;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mTouchY = event.getY();
                 mTouchX = event.getX();
-                event.getRawX(); // 获取相对于屏幕左上角的 x 坐标值
-                event.getRawY(); // 获取相对于屏幕左上角的 y 坐标值
                 break;
             case MotionEvent.ACTION_MOVE:
                 //判断是否需要拦截这个事件
@@ -214,8 +205,11 @@ public class RefreshView extends ViewGroup {
     private boolean isInterceptTouchEvent(MotionEvent event) {
         //获取滑动时的Y值变化
         float y = event.getY() - mTouchY;
-        //如果是向上滑,就交给ViewDragHelper的shouldInterceptTouchEvent去判断
-        if (y < 0) return mViewDragHelper.shouldInterceptTouchEvent(event);
+        //如果是手指向上滑,就交给ViewDragHelper的shouldInterceptTouchEvent去判断
+//        if (y < 0) return mViewDragHelper.shouldInterceptTouchEvent(event);
+
+
+
         //如果没有设置冲突的view,就根据mContentView来判断是否需要拦截
         if (mConflictViews == null && canChildScrollUp(mContentView)) {
             return false;
@@ -228,9 +222,20 @@ public class RefreshView extends ViewGroup {
                     //判断这个view是否被触摸
                     boolean touched = isTouched(view, event.getRawX(), event.getRawY());
                     //如果被触摸了,则判断这个view还能不能向上滑动,如果能则不拦截事件
+//                    if (touched) {
+//                        if (canChildScrollUp(view)) {
+//                            return false;
+//                        }
+//                    }
                     if (touched) {
-                        if (canChildScrollUp(view)) {
-                            return false;
+                        if (y < 0) {
+                            if (canChildScrollDown(view)) {
+                                return false;
+                            }
+                        } else {
+                            if (canChildScrollUp(view)) {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -258,8 +263,8 @@ public class RefreshView extends ViewGroup {
                     mOnPullDownDistanceChange.onPullDownDistanceChange((int) (mStartRefreshDistance*1.5), top);
                 }
             }
-            if (top < 0) top = 0;//禁止往上拉(只能往下拉)
-//            if (top > mHeadHeight * 2) top = (int) (mHeadHeight * 2);
+//            if (top < 0) top = 0;//禁止往上拉(只能往下拉)
+
             return top;
         }
 
@@ -273,6 +278,9 @@ public class RefreshView extends ViewGroup {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
             //修改头布局的位置
             mHeadView.layout(mHeadView.getLeft() + dx, mHeadView.getTop() + dy, mHeadView.getRight() + dx, mHeadView.getBottom() + dy);
+            //修改脚布局的位置
+            mFootView.layout(mFootView.getLeft() + dx, mFootView.getTop() + dy, mFootView.getRight() + dx, mFootView.getBottom() + dy);
+
         }
 
         @Override
@@ -285,8 +293,20 @@ public class RefreshView extends ViewGroup {
                 mViewDragHelper.smoothSlideViewTo(mContentView, 0, (int) mHeadHeight);
                 ViewCompat.postInvalidateOnAnimation(RefreshView.this);
             } else close();
+            //判断是否应该刷新
+            if (mFootView.getBottom() < mStartRefreshDistance / 2) {
+                state = PULL_UP_LOAD;
+                mViewDragHelper.smoothSlideViewTo(mFootView, 0, (int) mFootHeight);
+                ViewCompat.postInvalidateOnAnimation(RefreshView.this);
+            } else close1();
         }
     };
+
+    private void close1() {
+        state = PULL_DOWN_REFRESH;
+        mViewDragHelper.smoothSlideViewTo(mFootView, 0, 0);
+        ViewCompat.postInvalidateOnAnimation(RefreshView.this);
+    }
 
     /**
      * 回到初始的位置
@@ -361,6 +381,27 @@ public class RefreshView extends ViewGroup {
             }
         } else {
             return ViewCompat.canScrollVertically(mChildView, -1);
+        }
+    }
+
+    /**
+     * 用来判断是否可以下拉(解决点击冲突用)
+     */
+    public static boolean canChildScrollDown(View mChildView) {
+        if (mChildView == null) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT < 14) {
+            if (mChildView instanceof AbsListView) {
+                final AbsListView absListView = (AbsListView) mChildView;
+                return absListView.getChildCount() > 0
+                        && (absListView.getLastVisiblePosition() < absListView.getChildCount() || absListView.getChildAt(absListView.getChildCount() - 1)
+                        .getBottom() > absListView.getPaddingBottom());
+            } else {
+                return ViewCompat.canScrollVertically(mChildView, 1) || mChildView.getScrollY() < 0;
+            }
+        } else {
+            return ViewCompat.canScrollVertically(mChildView, 1);
         }
     }
 

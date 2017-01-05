@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,17 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
     private List<DemoBean> mDemoBeen;
     private LayoutInflater mLayoutInflater;
     private int mSelectPosition;
+    private View mLastView;//上一次打开的视图
+    private boolean isOnlyOneOpen;//是否允许打开多个视图
     public DemoApt(Context context, List<DemoBean> demoBeen) {
         mDemoBeen = demoBeen;
         mLayoutInflater = LayoutInflater.from(context);
         mSelectPosition = -1;
+    }
+
+
+    public void setOnlyOneOpen(boolean onlyOneOpen) {
+        isOnlyOneOpen = onlyOneOpen;
     }
 
     @Override
@@ -39,7 +47,7 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mTextView.setText(mDemoBeen.get(position).getName());
 //        holder.mTvDetails.setVisibility(View.VISIBLE);
-        //通过数据的的标志来打开和隐藏
+        //todo 通过数据的的标志来打开和隐藏
         holder.mTvDetails.setVisibility(mSelectPosition == position ? View.VISIBLE : View.GONE);
         holder.mTvDetails.setText("sadsadas\ndsadasda\ndsfsdfsd\n");
         holder.mTextView.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +59,12 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
                     // TODO: 2017/1/5  这里需要手动测量宽高,不然下面获取的就为0
                     holder.mTvDetails.measure(holder.mTvDetails.getMeasuredWidthAndState(), holder.mTvDetails.getMeasuredHeightAndState());
                     openItemDetails(holder.mTvDetails);
+                    if (isOnlyOneOpen) {
+                        if (mLastView != null && mLastView != holder.mTvDetails) {
+                            closeItemDetails(mLastView);
+                        }
+                        mLastView = holder.mTvDetails;
+                    }
                 }
             }
         });
@@ -74,7 +88,7 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
         }
     }
 
-    private void openItemDetails(View detailsView) {
+    private void openItemDetails(@NonNull View detailsView) {
         int measuredHeight = detailsView.getMeasuredHeight();
         detailsView.setVisibility(View.VISIBLE);
         ObjectAnimator leftViewScaleX = ObjectAnimator.ofFloat(detailsView, "scaleY", 0f, 1f);
@@ -85,13 +99,15 @@ public class DemoApt extends RecyclerView.Adapter<DemoApt.ViewHolder> {
                 float animatedValue = Float.parseFloat(animation.getAnimatedValue().toString());
                 ViewGroup.LayoutParams layoutParams = detailsView.getLayoutParams();
                 layoutParams.height = (int) (measuredHeight * animatedValue);
+
                 detailsView.setLayoutParams(layoutParams);
             }
         });
+
     }
 
 
-    private void closeItemDetails(View detailsView) {
+    private void closeItemDetails(@NonNull View detailsView) {
         int measuredHeight = detailsView.getMeasuredHeight();
         ObjectAnimator lastOpenViewScaleX = ObjectAnimator.ofFloat(detailsView, "scaleY", 1f, 0f);
         lastOpenViewScaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

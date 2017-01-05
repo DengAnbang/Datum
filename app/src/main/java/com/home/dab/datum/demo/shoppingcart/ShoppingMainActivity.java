@@ -22,7 +22,7 @@ import io.reactivex.Observable;
 public class ShoppingMainActivity extends AppCompatActivity {
     private ViewPager mVpContent;
     private RefreshView mRefreshView;
-    private TextView mTvRefreshHint;
+    private TextView mTvRefreshHint,mTv;
 
     //这里提供出去,让fragment里面滑动冲突的view添加进去refreshHint
     public RefreshView getRefreshView() {
@@ -36,6 +36,7 @@ public class ShoppingMainActivity extends AppCompatActivity {
         mVpContent = (ViewPager) findViewById(R.id.vp_content);
         mRefreshView = (RefreshView) findViewById(R.id.rv_refresh);
         mTvRefreshHint = (TextView) findViewById(R.id.tv_refresh_hint);
+        mTv = (TextView) findViewById(R.id.tv_refresh_hint_foot);
         initData();
     }
 
@@ -47,11 +48,19 @@ public class ShoppingMainActivity extends AppCompatActivity {
         fragments.add(new TestFragment2());
         ViewPagerApt viewPagerApt = new ViewPagerApt(getSupportFragmentManager(), fragments);
         mVpContent.setAdapter(viewPagerApt);
-        mRefreshView.setOnPullDownDistanceChange((startRefreshDistance, distance) -> mTvRefreshHint.setText("开始刷新的距离:" + startRefreshDistance + "当前拉的距离" + distance));
+        mRefreshView.setOnPullDownDistanceChange((startRefreshDistance, distance) -> {
+                    mTvRefreshHint.setText("开始刷新的距离:" + startRefreshDistance + "当前拉的距离" + distance);
+                    mTv.setText("开始刷新的距离:" + startRefreshDistance + "当前拉的距离" + distance);
+        });
+
+
+
         mRefreshView.setOnRefreshing(() -> {
             mTvRefreshHint.setText("刷新中...");
             Observable.timer(2000, TimeUnit.MILLISECONDS)
-                    .subscribe(aLong -> mRefreshView.close());
+                    .subscribe(aLong -> {
+                        mRefreshView.close();
+                    });
         });
 
     }

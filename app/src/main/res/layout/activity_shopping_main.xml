@@ -56,6 +56,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v4.view.ViewPager>
+
+        <TextView
+            android:id="@+id/tv_refresh_hint_foot"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="dasdasdasd"
+            />
     </com.home.dab.datum.view.RefreshView>
 
 </LinearLayout>

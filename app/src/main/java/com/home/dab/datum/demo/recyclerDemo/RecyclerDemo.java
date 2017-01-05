@@ -35,8 +35,6 @@ public class RecyclerDemo extends AppCompatActivity {
                 return demoBeen.get(position).getNum() + "";
             }
         });
-
     }
-
 
 }

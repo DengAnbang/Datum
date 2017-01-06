@@ -8,13 +8,15 @@
     android:orientation="vertical"
     tools:context="com.home.dab.datum.demo.recyclerDemo.RecyclerDemo">
 
-    <android.support.v7.widget.RecyclerView
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="itemSpread"
+        android:text="item可以展开"/>
 
-        android:id="@+id/recycler_dome"
-        android:layout_marginTop="30dp"
-        android:layout_width="800px"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="30dp">
-
-    </android.support.v7.widget.RecyclerView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="nested"
+        android:text="嵌套"/>
 </LinearLayout>

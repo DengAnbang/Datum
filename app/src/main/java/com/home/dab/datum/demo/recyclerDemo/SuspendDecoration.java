@@ -110,13 +110,17 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
                 //判断当前悬浮窗是否需要被挤压,如果需要,就改变矩形的bottom
+
                 if (mTitleHeight < child.getTop() && child.getTop() < mTitleHeight * 2) {
                     textY = child.getTop() - mTitleHeight;
                 }
+                //不能依据当前的第一个来画悬浮
+                if (i == 0) continue;
 
                 mRect.set(0, 0, child.getRight(), (int) textY);
                 c.drawRect(mRect, mBackgroundPaint);
                 c.drawText(showTitle(firstVisibleItemPosition), getBaseLineX(mRect), getBaseLineY(mRect), mTextPaint);
+                //画一个悬浮就结束循环
                 return;
             }
         }
@@ -162,7 +166,7 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
      * @param nowGroupId
      * @return
      */
-    abstract boolean isNewGroup(int priorGroupId, int nowGroupId);
+    public abstract boolean isNewGroup(int priorGroupId, int nowGroupId);
 
     /**
      * 悬浮窗的内容
@@ -170,5 +174,5 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
      * @param position
      * @return
      */
-    abstract String showTitle(int position);
+    public abstract String showTitle(int position);
 }

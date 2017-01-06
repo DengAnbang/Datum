@@ -3,13 +3,10 @@ package com.home.dab.datum.view;
 import android.content.Context;
 import android.graphics.RectF;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,40 +68,38 @@ public class RefreshView extends ViewGroup {
         mConflictViews.add(conflictView);
     }
 
-    public void setDownMaxDistance(int downMaxDistance) {
+    public void setDownMaxDistance(int downMaxDistancePX) {
         flag = flag + FLAG_DOWN_MAX_DISTANCE;
-        mDownMaxDistance = downMaxDistance;
-        Log.e(TAG, "setTopMaxDistance: " + ((flag & 1) == 1) + "**" + ((flag & 2) == 2));
+        mDownMaxDistance = downMaxDistancePX;
     }
 
-    public void setTopMaxDistance(int topMaxDistance) {
+    public void setTopMaxDistance(int topMaxDistancePX) {
         flag = flag + FLAG_TOP_MAX_DISTANCE;
-        mTopMaxDistance = topMaxDistance;
-        Log.e(TAG, "setTopMaxDistance: " + ((flag & 1) == 1) + "**" + ((flag & 2) == 2));
+        mTopMaxDistance = topMaxDistancePX;
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putFloat("mHeadHeight",mHeadHeight);
-        bundle.putFloat("mHeadWidth",mHeadWidth);
-        bundle.putFloat("mContentHeight",mContentHeight);
-        bundle.putFloat("mContentWidth",mContentWidth);
-        bundle.putFloat("mStartRefreshDistance",mStartRefreshDistance);
-        bundle.putInt("state",state);
-        return bundle;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        Bundle bundle = (Bundle) state;
-        mHeadHeight=bundle.getFloat("mHeadHeight",mHeadHeight);
-        mHeadWidth=bundle.getFloat("mHeadWidth",mHeadWidth);
-        mContentHeight=bundle.getFloat("mContentHeight",mContentHeight);
-        mContentWidth=bundle.getFloat("mContentWidth",mContentWidth);
-        mStartRefreshDistance=bundle.getFloat("mStartRefreshDistance",mStartRefreshDistance);
-    }
+//    @Override
+//    protected Parcelable onSaveInstanceState() {
+//        Bundle bundle = new Bundle();
+//        bundle.putFloat("mHeadHeight",mHeadHeight);
+//        bundle.putFloat("mHeadWidth",mHeadWidth);
+//        bundle.putFloat("mContentHeight",mContentHeight);
+//        bundle.putFloat("mContentWidth",mContentWidth);
+//        bundle.putFloat("mStartRefreshDistance",mStartRefreshDistance);
+//        bundle.putInt("state",state);
+//        return bundle;
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Parcelable state) {
+//        super.onRestoreInstanceState(state);
+//        Bundle bundle = (Bundle) state;
+//        mHeadHeight=bundle.getFloat("mHeadHeight",mHeadHeight);
+//        mHeadWidth=bundle.getFloat("mHeadWidth",mHeadWidth);
+//        mContentHeight=bundle.getFloat("mContentHeight",mContentHeight);
+//        mContentWidth=bundle.getFloat("mContentWidth",mContentWidth);
+//        mStartRefreshDistance=bundle.getFloat("mStartRefreshDistance",mStartRefreshDistance);
+//    }
 
     public RefreshView(Context context) {
         this(context, null, 0);
@@ -127,10 +122,6 @@ public class RefreshView extends ViewGroup {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         int childCount = getChildCount();
-        Log.e(TAG, "init: " + childCount);
-//        if (childCount < 1 || childCount > 3) {
-//            throw new RuntimeException("里面只能含有一到三个子View!");
-//        }
         if (childCount != 2 && childCount != 3) {
             throw new RuntimeException("里面只能含有2到3个子View!");
         }
@@ -201,7 +192,6 @@ public class RefreshView extends ViewGroup {
             mContentHeight = mContentView.getMeasuredHeight();
             mContentWidth = mContentView.getMeasuredWidth();
         }
-        Log.e(TAG, "onSizeChanged: ");
     }
 
     @Override

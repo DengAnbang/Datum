@@ -144,6 +144,10 @@
         </activity>
         <activity android:name=".demo.okioTest.OkIo">
         </activity>
+        <activity android:name=".demo.recyclerDemo.itemSpread.ItemSpread">
+        </activity>
+        <activity android:name=".demo.recyclerDemo.nested.RecyclerNested">
+        </activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.home.dab.datum.demo.recyclerDemo;
+package com.home.dab.datum.demo.recyclerDemo.itemSpread;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.home.dab.datum.R;
+import com.home.dab.datum.demo.recyclerDemo.DemoBean;
 
 import java.util.List;
 

@@ -48,20 +48,34 @@ public class ShoppingMainActivity extends AppCompatActivity {
         fragments.add(new TestFragment2());
         ViewPagerApt viewPagerApt = new ViewPagerApt(getSupportFragmentManager(), fragments);
         mVpContent.setAdapter(viewPagerApt);
-        mRefreshView.setOnPullDownDistanceChange((startRefreshDistance, distance) -> {
+        mRefreshView.setRefreshViewListener(new RefreshView.OnRefreshViewListener() {
+            @Override
+            public void onPullDownDistanceChange(int refreshFlag, int startRefreshDistance, int distance) {
+                if (refreshFlag == RefreshView.PULL_TOP_LOAD) {
                     mTvRefreshHint.setText("开始刷新的距离:" + startRefreshDistance + "当前拉的距离" + distance);
+                } else if (refreshFlag == RefreshView.PULL_DOWN_LOAD) {
                     mTv.setText("开始刷新的距离:" + startRefreshDistance + "当前拉的距离" + distance);
+                }
+            }
+
+            @Override
+            public void onRefreshing(int refreshFlag) {
+                if (refreshFlag == RefreshView.PULL_TOP_LOAD) {
+                    mTvRefreshHint.setText("刷新中...");
+                } else if (refreshFlag == RefreshView.PULL_DOWN_LOAD) {
+                    mTv.setText("刷新中...");
+                }
+                Observable.timer(2000, TimeUnit.MILLISECONDS)
+                        .subscribe(aLong -> {
+                            mRefreshView.close();
+                        });
+            }
         });
+//        mRefreshView.setDownMaxDistance(700);
+//        mRefreshView.setTopMaxDistance(500);
 
 
 
-        mRefreshView.setOnRefreshing(() -> {
-            mTvRefreshHint.setText("刷新中...");
-            Observable.timer(2000, TimeUnit.MILLISECONDS)
-                    .subscribe(aLong -> {
-                        mRefreshView.close();
-                    });
-        });
 
     }
 }

@@ -38,19 +38,31 @@ public class RefreshView extends ViewGroup {
     private float mContentHeight, mContentWidth;
 
     private float mStartRefreshDistance;//需要下拉的距离才触发刷新
+    private float mStartLoadDistance;//需要上拉的距离才触发加载
+    private int mTopMaxDistance;//上拉最大距离
+    private int mDownMaxDistance;//下拉最大距离
 
     private ViewDragHelper mViewDragHelper;
 
-    private static final int PULL_DOWN_REFRESH = 1;
-    private static final int PULL_UP_LOAD = 2;//标志当前进入的刷新模式
-    private int state = PULL_DOWN_REFRESH;
+    private static final int FLAG_TOP_MAX_DISTANCE = 1;//标志设置了最大下拉最大距离
+    private static final int FLAG_DOWN_MAX_DISTANCE = 2;//标志设置了最大的上拉距离
+
+    public static final int PULL_LEISURE_REFRESH = 0;
+    public static final int PULL_TOP_LOAD = 1;//标志当前进入的x下拉刷新模式
+    public static final int PULL_DOWN_LOAD = 2;//标志当前进入的上拉加载模式
+
+    public int state;
     //触摸获得Y的位置
     private float mTouchY;
-    //触摸获得X的位置(为防止滑动冲突而设置)
-    private float mTouchX;
-
+    private long flag;
     private View mContentView, mHeadView, mFootView;
     private List<View> mConflictViews;
+    private OnRefreshViewListener mRefreshViewListener;
+
+
+    public void setRefreshViewListener(OnRefreshViewListener refreshViewListener) {
+        mRefreshViewListener = refreshViewListener;
+    }
 
     public void setConflictView(@NonNull View conflictView) {
         if (mConflictViews == null) {
@@ -59,6 +71,17 @@ public class RefreshView extends ViewGroup {
         mConflictViews.add(conflictView);
     }
 
+    public void setDownMaxDistance(int downMaxDistance) {
+        flag = flag + FLAG_DOWN_MAX_DISTANCE;
+        mDownMaxDistance = downMaxDistance;
+        Log.e(TAG, "setTopMaxDistance: " + ((flag & 1) == 1) + "**" + ((flag & 2) == 2));
+    }
+
+    public void setTopMaxDistance(int topMaxDistance) {
+        flag = flag + FLAG_TOP_MAX_DISTANCE;
+        mTopMaxDistance = topMaxDistance;
+        Log.e(TAG, "setTopMaxDistance: " + ((flag & 1) == 1) + "**" + ((flag & 2) == 2));
+    }
 
     @Override
     protected Parcelable onSaveInstanceState() {
@@ -134,7 +157,6 @@ public class RefreshView extends ViewGroup {
 
         for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
-            Log.e(TAG, "measureWidth is " + v.getMeasuredWidth() + "measureHeight is " + v.getMeasuredHeight());
             int widthSpec = 0;
             int heightSpec = 0;
             LayoutParams params = v.getLayoutParams();
@@ -165,25 +187,29 @@ public class RefreshView extends ViewGroup {
             mHeadHeight = mHeadView.getMeasuredHeight();
             mHeadWidth = mHeadView.getMeasuredWidth();
             if (mStartRefreshDistance == 0) {
-                mStartRefreshDistance = mHeadHeight;
+                mStartRefreshDistance = mHeadHeight / 2;
             }
         }
         if (mFootView != null) {
             mFootHeight = mFootView.getMeasuredHeight();
             mFootWidth = mFootView.getMeasuredWidth();
+            if (mStartLoadDistance == 0) {
+                mStartLoadDistance = mFootHeight / 2;
+            }
         }
         if (mContentView != null) {
             mContentHeight = mContentView.getMeasuredHeight();
             mContentWidth = mContentView.getMeasuredWidth();
         }
-
+        Log.e(TAG, "onSizeChanged: ");
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         mHeadView.layout(0, (int) (-mHeadHeight), (int) mHeadWidth, 0);
         mContentView.layout(0, 0, (int) mContentWidth, (int) mContentHeight);
-        mFootView.layout(0, (int) mContentHeight, (int) mFootWidth, (int) (mContentHeight + mFootHeight));
+        if (mFootView != null)
+            mFootView.layout(0, (int) mContentHeight, (int) mFootWidth, (int) (mContentHeight + mFootHeight));
     }
 
 
@@ -193,7 +219,7 @@ public class RefreshView extends ViewGroup {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mTouchY = event.getY();
-                mTouchX = event.getX();
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 //判断是否需要拦截这个事件
@@ -257,14 +283,21 @@ public class RefreshView extends ViewGroup {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            if (state != PULL_UP_LOAD) {
+
+//            if (mTopMaxDistance != 0 && top > mTopMaxDistance) top = mTopMaxDistance;
+//            if (mDownMaxDistance != 0 && -top > mTopMaxDistance) top = -mTopMaxDistance;
+            mTopMaxDistance = ((flag & FLAG_TOP_MAX_DISTANCE) == FLAG_TOP_MAX_DISTANCE) ? mTopMaxDistance : (int) mHeadHeight;
+            if (top > mTopMaxDistance) top = mTopMaxDistance;
+            if (mFootView != null) {
+                mDownMaxDistance = ((flag & FLAG_DOWN_MAX_DISTANCE) == FLAG_DOWN_MAX_DISTANCE) ? mDownMaxDistance : (int) mFootHeight;
+                if (-top > mDownMaxDistance) top = -mDownMaxDistance;
+            } else if (top < 0) top = 0;
+            if (state == PULL_LEISURE_REFRESH) {
                 //回调出去当前拉的距离
-                if (mOnPullDownDistanceChange != null) {
-                    mOnPullDownDistanceChange.onPullDownDistanceChange((int) (mStartRefreshDistance*1.5), top);
+                if (mRefreshViewListener != null) {
+                    mRefreshViewListener.onPullDownDistanceChange((top < 0) ? PULL_DOWN_LOAD : PULL_TOP_LOAD, (int) (mStartRefreshDistance), top);
                 }
             }
-//            if (top < 0) top = 0;//禁止往上拉(只能往下拉)
-
             return top;
         }
 
@@ -278,41 +311,37 @@ public class RefreshView extends ViewGroup {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
             //修改头布局的位置
             mHeadView.layout(mHeadView.getLeft() + dx, mHeadView.getTop() + dy, mHeadView.getRight() + dx, mHeadView.getBottom() + dy);
-            //修改脚布局的位置
-            mFootView.layout(mFootView.getLeft() + dx, mFootView.getTop() + dy, mFootView.getRight() + dx, mFootView.getBottom() + dy);
+            if (mFootView != null) {
+                //修改脚布局的位置
+                mFootView.layout(mFootView.getLeft() + dx, mFootView.getTop() + dy, mFootView.getRight() + dx, mFootView.getBottom() + dy);
+            }
 
         }
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
-
             //判断是否应该刷新
-            if (mHeadView.getTop() > mStartRefreshDistance / 2) {
-                state = PULL_UP_LOAD;
-                mViewDragHelper.smoothSlideViewTo(mContentView, 0, (int) mHeadHeight);
+            if (mContentView.getTop() > mStartRefreshDistance) {
+                state = PULL_TOP_LOAD;
+                mViewDragHelper.smoothSlideViewTo(mContentView, 0, mContentView.getTop());
                 ViewCompat.postInvalidateOnAnimation(RefreshView.this);
+            } else if (mFootView != null) {
+                if (-mContentView.getTop() > mStartLoadDistance) {
+                    state = PULL_DOWN_LOAD;
+                    mViewDragHelper.smoothSlideViewTo(mContentView, 0, mContentView.getTop());
+                    ViewCompat.postInvalidateOnAnimation(RefreshView.this);
+                } else close();
             } else close();
-            //判断是否应该刷新
-            if (mFootView.getBottom() < mStartRefreshDistance / 2) {
-                state = PULL_UP_LOAD;
-                mViewDragHelper.smoothSlideViewTo(mFootView, 0, (int) mFootHeight);
-                ViewCompat.postInvalidateOnAnimation(RefreshView.this);
-            } else close1();
         }
     };
 
-    private void close1() {
-        state = PULL_DOWN_REFRESH;
-        mViewDragHelper.smoothSlideViewTo(mFootView, 0, 0);
-        ViewCompat.postInvalidateOnAnimation(RefreshView.this);
-    }
 
     /**
      * 回到初始的位置
      */
     public void close() {
-        state = PULL_DOWN_REFRESH;
+        state = PULL_LEISURE_REFRESH;
         mViewDragHelper.smoothSlideViewTo(mContentView, 0, 0);
         ViewCompat.postInvalidateOnAnimation(RefreshView.this);
     }
@@ -324,42 +353,12 @@ public class RefreshView extends ViewGroup {
             ViewCompat.postInvalidateOnAnimation(RefreshView.this);
         } else {
             //滚动完成,来根据状态判断是否需要需要回调刷新
-            if (state == PULL_UP_LOAD) {
-                if (mOnRefreshing != null) {
-                    mOnRefreshing.onRefreshing();
+            if (state != PULL_LEISURE_REFRESH) {
+                if (mRefreshViewListener != null) {
+                    mRefreshViewListener.onRefreshing(state);
                 }
             }
         }
-    }
-
-    private OnPullDownDistanceChange mOnPullDownDistanceChange;
-
-    public void setOnPullDownDistanceChange(OnPullDownDistanceChange onPullDownDistanceChange) {
-        mOnPullDownDistanceChange = onPullDownDistanceChange;
-    }
-
-    private OnRefreshing mOnRefreshing;
-
-    public void setOnRefreshing(OnRefreshing onRefreshing) {
-        mOnRefreshing = onRefreshing;
-    }
-
-    /**
-     * 下拉距离回调
-     */
-    public interface OnPullDownDistanceChange {
-        /**
-         * @param startRefreshDistance 超过这个距离开始刷新
-         * @param distance             当前的距离
-         */
-        void onPullDownDistanceChange(int startRefreshDistance, int distance);
-    }
-
-    /**
-     * 刷新的回调
-     */
-    public interface OnRefreshing {
-        void onRefreshing();
     }
 
 
@@ -416,5 +415,25 @@ public class RefreshView extends ViewGroup {
                 location[1] + view.getHeight());
         return rectF.contains(rawX, rawY);
     }
+
+    /**
+     * 下拉距离回调
+     */
+    public interface OnRefreshViewListener {
+        /**
+         * @param refreshFlag          上拉或者下拉的标志
+         * @param startRefreshDistance 超过这个距离开始刷新
+         * @param distance             当前的距离
+         */
+        void onPullDownDistanceChange(int refreshFlag, int startRefreshDistance, int distance);
+
+        /**
+         * 刷新的回调
+         *
+         * @param refreshFlag 刷新或者加载的标志
+         */
+        void onRefreshing(int refreshFlag);
+    }
+
 }
 

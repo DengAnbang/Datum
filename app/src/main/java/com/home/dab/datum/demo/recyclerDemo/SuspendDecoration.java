@@ -20,6 +20,7 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
     private Paint mBackgroundPaint;//悬浮窗的画笔
     private TextPaint mTextPaint;//悬浮窗内容的画笔
     private int mTitleGravity;//悬浮窗的内容显示位置(左,中,右)
+    private int mTextOffsetX, mTextOffsetY;
     public static final int TITLE_GRAVITY_CENTER = 0;
     public static final int TITLE_GRAVITY_LEFT = 1;
     public static final int TITLE_GRAVITY_RIGHT = 2;
@@ -34,7 +35,7 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
         mTitleHeight = titleHeight;
         mTitleGravity = titleGravity;
         mBackgroundPaint = new Paint();
-        mBackgroundPaint.setColor(Color.GREEN);
+//        mBackgroundPaint.setColor(Color.GREEN);
         //设置悬浮栏中文本的画笔
         mTextPaint = new TextPaint();
         mTextPaint.setAntiAlias(true);
@@ -55,6 +56,41 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
         mRect = new Rect();
     }
 
+    /**
+     * 设置字体的颜色
+     *
+     * @param color
+     */
+    public void setTextColor(int color) {
+        mTextPaint.setColor(color);
+    }
+
+    /**
+     * 设置文字在X轴的偏移
+     *
+     * @param textOffsetX
+     */
+    public void setTextOffsetX(int textOffsetX) {
+        mTextOffsetX = textOffsetX;
+    }
+
+    /**
+     * 设置文字在Y轴的偏移
+     *
+     * @param textOffsetY
+     */
+    public void setTextOffsetY(int textOffsetY) {
+        mTextOffsetY = textOffsetY;
+    }
+
+    /**
+     * 设置背景的颜色
+     *
+     * @param color
+     */
+    public void setBackgroundColor(int color) {
+        mBackgroundPaint.setColor(color);
+    }
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDraw(c, parent, state);
@@ -117,7 +153,7 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
                 //不能依据当前的第一个来画悬浮
                 if (i == 0) continue;
 
-                mRect.set(0, 0, child.getRight(), (int) textY);
+                mRect.set(0, (int) textY-mTitleHeight, child.getRight(), (int) textY);
                 c.drawRect(mRect, mBackgroundPaint);
                 c.drawText(showTitle(firstVisibleItemPosition), getBaseLineX(mRect), getBaseLineY(mRect), mTextPaint);
                 //画一个悬浮就结束循环
@@ -136,13 +172,13 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
         switch (mTitleGravity) {
             case TITLE_GRAVITY_LEFT:
                 mTextPaint.setTextAlign(Paint.Align.LEFT);
-                return rect.left;
+                return rect.left+mTextOffsetX;
             case TITLE_GRAVITY_RIGHT:
                 mTextPaint.setTextAlign(Paint.Align.RIGHT);
-                return rect.right;
+                return rect.right+mTextOffsetX;
             default:
                 mTextPaint.setTextAlign(Paint.Align.CENTER);
-                return rect.centerX();
+                return rect.centerX()+mTextOffsetX;
         }
 
     }
@@ -157,7 +193,7 @@ public abstract class SuspendDecoration extends RecyclerView.ItemDecoration {
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
         float top = fontMetrics.top;//为基线到字体上边框的距离,即上图中的top
         float bottom = fontMetrics.bottom;//为基线到字体下边框的距离,即上图中的bottom
-        return (int) (rect.centerY() - top / 2 - bottom / 2);
+        return (int) (rect.centerY() - top / 2 - bottom / 2) + mTextOffsetY;
     }
 
     /**

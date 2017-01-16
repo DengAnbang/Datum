@@ -1,4 +1,4 @@
-package com.home.dab.datum.demo.recyclerDemo.nested;
+package com.home.dab.datum.demo.recyclerDemo;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.home.dab.datum.R;
-import com.home.dab.datum.demo.recyclerDemo.DemoBean;
 
 import java.util.List;
 

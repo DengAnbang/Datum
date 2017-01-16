@@ -34,8 +34,8 @@ public class RefreshView extends ViewGroup {
 
     private float mContentHeight, mContentWidth;
 
-    private float mStartRefreshDistance;//需要下拉的距离才触发刷新
-    private float mStartLoadDistance;//需要上拉的距离才触发加载
+    private float mStartTopRefreshDistance;//需要下拉的距离才触发刷新
+    private float mStartDownLoadDistance;//需要上拉的距离才触发加载
     private int mTopMaxDistance;//上拉最大距离
     private int mDownMaxDistance;//下拉最大距离
 
@@ -61,6 +61,29 @@ public class RefreshView extends ViewGroup {
         mRefreshViewListener = refreshViewListener;
     }
 
+    /**
+     * 设置上面的刷新距离
+     *
+     * @param startTopRefreshDistance
+     */
+    public void setStartTopRefreshDistance(float startTopRefreshDistance) {
+        mStartTopRefreshDistance = startTopRefreshDistance;
+    }
+
+    /**
+     * 设置下面刷新的距离
+     *
+     * @param startDownLoadDistance
+     */
+    public void setStartDownLoadDistance(float startDownLoadDistance) {
+        mStartDownLoadDistance = startDownLoadDistance;
+    }
+
+    /**
+     * 设置滑动冲突了的View
+     *
+     * @param conflictView
+     */
     public void setConflictView(@NonNull View conflictView) {
         if (mConflictViews == null) {
             mConflictViews = new ArrayList<>();
@@ -68,11 +91,21 @@ public class RefreshView extends ViewGroup {
         mConflictViews.add(conflictView);
     }
 
+    /**
+     * 设置上拉的最大距离
+     *
+     * @param downMaxDistancePX
+     */
     public void setDownMaxDistance(int downMaxDistancePX) {
         flag = flag + FLAG_DOWN_MAX_DISTANCE;
         mDownMaxDistance = downMaxDistancePX;
     }
 
+    /**
+     * 设置下拉的最大距离
+     *
+     * @param topMaxDistancePX
+     */
     public void setTopMaxDistance(int topMaxDistancePX) {
         flag = flag + FLAG_TOP_MAX_DISTANCE;
         mTopMaxDistance = topMaxDistancePX;
@@ -85,7 +118,7 @@ public class RefreshView extends ViewGroup {
 //        bundle.putFloat("mHeadWidth",mHeadWidth);
 //        bundle.putFloat("mContentHeight",mContentHeight);
 //        bundle.putFloat("mContentWidth",mContentWidth);
-//        bundle.putFloat("mStartRefreshDistance",mStartRefreshDistance);
+//        bundle.putFloat("mStartTopRefreshDistance",mStartTopRefreshDistance);
 //        bundle.putInt("state",state);
 //        return bundle;
 //    }
@@ -98,7 +131,7 @@ public class RefreshView extends ViewGroup {
 //        mHeadWidth=bundle.getFloat("mHeadWidth",mHeadWidth);
 //        mContentHeight=bundle.getFloat("mContentHeight",mContentHeight);
 //        mContentWidth=bundle.getFloat("mContentWidth",mContentWidth);
-//        mStartRefreshDistance=bundle.getFloat("mStartRefreshDistance",mStartRefreshDistance);
+//        mStartTopRefreshDistance=bundle.getFloat("mStartTopRefreshDistance",mStartTopRefreshDistance);
 //    }
 
     public RefreshView(Context context) {
@@ -177,15 +210,15 @@ public class RefreshView extends ViewGroup {
         if (mHeadView != null) {
             mHeadHeight = mHeadView.getMeasuredHeight();
             mHeadWidth = mHeadView.getMeasuredWidth();
-            if (mStartRefreshDistance == 0) {
-                mStartRefreshDistance = mHeadHeight / 2;
+            if (mStartTopRefreshDistance == 0) {
+                mStartTopRefreshDistance = mHeadHeight / 2;
             }
         }
         if (mFootView != null) {
             mFootHeight = mFootView.getMeasuredHeight();
             mFootWidth = mFootView.getMeasuredWidth();
-            if (mStartLoadDistance == 0) {
-                mStartLoadDistance = mFootHeight / 2;
+            if (mStartDownLoadDistance == 0) {
+                mStartDownLoadDistance = mFootHeight / 2;
             }
         }
         if (mContentView != null) {
@@ -196,10 +229,26 @@ public class RefreshView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        mHeadView.layout(0, (int) (-mHeadHeight), (int) mHeadWidth, 0);
-        mContentView.layout(0, 0, (int) mContentWidth, (int) mContentHeight);
+        // TODO: 2017/1/12 当刷新的时候,一直调用,所有先 return;
+        if (mBoolean) {
+            return;
+//            mHeadView.layout(0, mContentView.getTop() + (int) (-mHeadHeight), (int) mHeadWidth, (int) mHeadHeight);
+//            mContentView.layout(0, mContentView.getTop(), (int) mContentWidth, mContentView.getBottom() + (int) mContentHeight);
+        } else {
+            mHeadView.layout(0, (int) (-mHeadHeight), (int) mHeadWidth, 0);
+            mContentView.layout(0, 0, (int) mContentWidth, (int) mContentHeight);
+        }
+
+
+//        mHeadView.layout(0, mContentView.getTop() + (int) (-mHeadHeight), (int) mHeadWidth, (int) mHeadHeight);
+//        mContentView.layout(0, mContentView.getTop(), (int) mContentWidth, mContentView.getBottom() + (int) mContentHeight);
+//
+//
+//        mHeadView.layout(0, (int) (-mHeadHeight), (int) mHeadWidth, 0);
+//        mContentView.layout(0, 0, (int) mContentWidth, (int) mContentHeight);
         if (mFootView != null)
             mFootView.layout(0, (int) mContentHeight, (int) mFootWidth, (int) (mContentHeight + mFootHeight));
+
     }
 
 
@@ -218,13 +267,12 @@ public class RefreshView extends ViewGroup {
         return mViewDragHelper.shouldInterceptTouchEvent(event);
     }
 
+    private boolean mBoolean;
     private boolean isInterceptTouchEvent(MotionEvent event) {
         //获取滑动时的Y值变化
         float y = event.getY() - mTouchY;
         //如果是手指向上滑,就交给ViewDragHelper的shouldInterceptTouchEvent去判断
 //        if (y < 0) return mViewDragHelper.shouldInterceptTouchEvent(event);
-
-
 
         //如果没有设置冲突的view,就根据mContentView来判断是否需要拦截
         if (mConflictViews == null && canChildScrollUp(mContentView)) {
@@ -256,7 +304,8 @@ public class RefreshView extends ViewGroup {
                     }
                 }
             }
-        return mViewDragHelper.shouldInterceptTouchEvent(event);
+        boolean b = mViewDragHelper.shouldInterceptTouchEvent(event);
+        return b;
     }
 
     @Override
@@ -276,16 +325,20 @@ public class RefreshView extends ViewGroup {
 
 //            if (mTopMaxDistance != 0 && top > mTopMaxDistance) top = mTopMaxDistance;
 //            if (mDownMaxDistance != 0 && -top > mTopMaxDistance) top = -mTopMaxDistance;
+            if (top >= 0) {
+                mBoolean = true;
+            }
             mTopMaxDistance = ((flag & FLAG_TOP_MAX_DISTANCE) == FLAG_TOP_MAX_DISTANCE) ? mTopMaxDistance : (int) mHeadHeight;
             if (top > mTopMaxDistance) top = mTopMaxDistance;
             if (mFootView != null) {
                 mDownMaxDistance = ((flag & FLAG_DOWN_MAX_DISTANCE) == FLAG_DOWN_MAX_DISTANCE) ? mDownMaxDistance : (int) mFootHeight;
                 if (-top > mDownMaxDistance) top = -mDownMaxDistance;
             } else if (top < 0) top = 0;
+
             if (state == PULL_LEISURE_REFRESH) {
                 //回调出去当前拉的距离
                 if (mRefreshViewListener != null) {
-                    mRefreshViewListener.onPullDownDistanceChange((top < 0) ? PULL_DOWN_LOAD : PULL_TOP_LOAD, (int) (mStartRefreshDistance), top);
+                    mRefreshViewListener.onPullDownDistanceChange((top < 0) ? PULL_DOWN_LOAD : PULL_TOP_LOAD, (int) (mStartTopRefreshDistance), top);
                 }
             }
             return top;
@@ -301,6 +354,7 @@ public class RefreshView extends ViewGroup {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
             //修改头布局的位置
             mHeadView.layout(mHeadView.getLeft() + dx, mHeadView.getTop() + dy, mHeadView.getRight() + dx, mHeadView.getBottom() + dy);
+//            mHeadView.layout(mHeadView.getLeft() + dx, mHeadView.getTop() + dy, mHeadView.getRight() + dx, mHeadView.getBottom() + dy);
             if (mFootView != null) {
                 //修改脚布局的位置
                 mFootView.layout(mFootView.getLeft() + dx, mFootView.getTop() + dy, mFootView.getRight() + dx, mFootView.getBottom() + dy);
@@ -311,18 +365,25 @@ public class RefreshView extends ViewGroup {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
+            mBoolean = false;
             //判断是否应该刷新
-            if (mContentView.getTop() > mStartRefreshDistance) {
+            if (mContentView.getTop() > mStartTopRefreshDistance) {
                 state = PULL_TOP_LOAD;
-                mViewDragHelper.smoothSlideViewTo(mContentView, 0, mContentView.getTop());
+                mViewDragHelper.smoothSlideViewTo(mContentView, 0, (int) mStartTopRefreshDistance);
                 ViewCompat.postInvalidateOnAnimation(RefreshView.this);
             } else if (mFootView != null) {
-                if (-mContentView.getTop() > mStartLoadDistance) {
+                if (-mContentView.getTop() > mStartDownLoadDistance) {
                     state = PULL_DOWN_LOAD;
                     mViewDragHelper.smoothSlideViewTo(mContentView, 0, mContentView.getTop());
                     ViewCompat.postInvalidateOnAnimation(RefreshView.this);
                 } else close();
             } else close();
+            //滚动完成,来根据状态判断是否需要需要回调刷新
+            if (state != PULL_LEISURE_REFRESH) {
+                if (mRefreshViewListener != null) {
+                    mRefreshViewListener.onRefreshing(state);
+                }
+            }
         }
     };
 
@@ -342,12 +403,12 @@ public class RefreshView extends ViewGroup {
         if (mViewDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(RefreshView.this);
         } else {
-            //滚动完成,来根据状态判断是否需要需要回调刷新
-            if (state != PULL_LEISURE_REFRESH) {
-                if (mRefreshViewListener != null) {
-                    mRefreshViewListener.onRefreshing(state);
-                }
-            }
+//            //滚动完成,来根据状态判断是否需要需要回调刷新
+//            if (state != PULL_LEISURE_REFRESH) {
+//                if (mRefreshViewListener != null) {
+//                    mRefreshViewListener.onRefreshing(state);
+//                }
+//            }
         }
     }
 

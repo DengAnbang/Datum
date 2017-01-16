@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.home.dab.datum.R;
 import com.home.dab.datum.demo.recyclerDemo.DemoBean;
+import com.home.dab.datum.demo.recyclerDemo.InteriorApt;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.home.dab.datum.R;
+import com.home.dab.datum.demo.recyclerDemo.DemoApt;
 import com.home.dab.datum.demo.recyclerDemo.DemoBean;
 import com.home.dab.datum.demo.recyclerDemo.SuspendDecoration;
 

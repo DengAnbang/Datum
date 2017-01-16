@@ -31,6 +31,7 @@
                 app:title="这是标题">
 
                 <ImageView
+
                     android:id="@+id/main.backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
@@ -40,9 +41,12 @@
 
 
                 <android.support.v7.widget.Toolbar
+                    android:id="@+id/tb_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?android:attr/actionBarSize"
-                    />
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:title="@string/app_name"
+                    app:layout_collapseMode="pin"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 

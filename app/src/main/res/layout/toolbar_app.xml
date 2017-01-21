@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:id="@+id/toolbar"
+                                   app:contentInsetLeft="0dp"
+                                   app:contentInsetStart="0dp"
+app:layout_scrollFlags="scroll|enterAlways"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="?attr/actionBarSize"
+                                   android:focusable="true"
+                                   android:title=""
+                                   android:focusableInTouchMode="true"
+                                   app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    >
+
+    <ImageView
+        android:id="@+id/title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@mipmap/btn_me_addin0"
+       />
+
+    <TextView
+        android:id="@+id/title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center_horizontal"
+        android:text="asda"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/title_rightTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:text="dfsfsd"
+       />
+</android.support.v7.widget.Toolbar>

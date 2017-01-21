@@ -9,61 +9,93 @@
     tools:context="com.home.dab.datum.MainActivity">
 
     <Button
+
+        android:layout_weight="1"
         android:onClick="download"
         android:text="下载"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeIcon"
         android:text="修改app图标和名字"/>
     <Button
+        android:layout_weight="1"
         android:onClick="shoppingCart"
         android:text="二级联动"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="md"
         android:text="MD"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="java2js"
         android:text="java2js"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="crypto"
         android:text="加密解密"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="recyclerView"
         android:text="recyler的练习"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="share"
         android:text="分享的练习"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="myView"
         android:text="自定义的练习"/>
 
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="okio"
         android:text="okio的练习"/>
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="toolbar"
+        android:text="toolbar的练习"/>
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="album"
+        android:text="自定义相册的练习"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="picker"
+        android:text="仿picker"/>
 </LinearLayout>

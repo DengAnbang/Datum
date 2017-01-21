@@ -46,7 +46,7 @@ public class StoreFragment extends Fragment {
     private void initData() {
         Random random = new Random();
         List<Data> datas = new ArrayList<>();
-        for (int i = 0; i < 10 + random.nextInt(10); i++) {
+        for (int i = 0; i < 50 + random.nextInt(10); i++) {
             datas.add(new Data(i, "商品分类" + i));
         }
         List<Data.Commodity> commodities = new ArrayList<>();

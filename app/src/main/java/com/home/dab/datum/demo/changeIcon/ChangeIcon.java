@@ -19,6 +19,7 @@ public class ChangeIcon extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_icon);
+
         mDefault = new ComponentName(getBaseContext(),
                 "com.home.dab.datum.MainActivity"
         );

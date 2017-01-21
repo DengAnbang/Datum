@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.home.dab.datum.demo.toolbar.ToolbarActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            app:contentScrim="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:fitsSystemWindows="true"
+            android:layout_height="200dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:contentScrim="@color/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <include layout="@layout/toolbar_app"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <!--这是一个 toolbar不透明的-->
+        <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp">-->
+
+        <!--<android.support.design.widget.CollapsingToolbarLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--app:contentScrim="@color/colorPrimary"-->
+        <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@mipmap/ic_launcher"/>-->
+
+        <!--<include layout="@layout/toolbar_app"/>-->
+        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+        <!--</android.support.design.widget.AppBarLayout>-->
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</RelativeLayout>

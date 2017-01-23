@@ -8,6 +8,7 @@ import android.view.View;
 import com.home.dab.datum.R;
 import com.home.dab.datum.demo.recyclerDemo.itemSpread.ItemSpread;
 import com.home.dab.datum.demo.recyclerDemo.nested.RecyclerNested;
+import com.home.dab.datum.demo.recyclerDemo.picker.PickerRecyclerView;
 
 public class RecyclerDemo extends AppCompatActivity {
 
@@ -24,5 +25,9 @@ public class RecyclerDemo extends AppCompatActivity {
 
     public void nested(View view) {
         startActivity(new Intent(RecyclerDemo.this, RecyclerNested.class));
+    }
+
+    public void picker(View view) {
+        startActivity(new Intent(RecyclerDemo.this, PickerRecyclerView.class));
     }
 }

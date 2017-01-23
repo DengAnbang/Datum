@@ -22,7 +22,7 @@ public class PickerView extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
-            strings.add(i + "");
+            strings.add(i + "我");
         }
         PickerViewAdapter pickerViewAdapter = new PickerViewAdapter(mRecyclerView,strings);
         mRecyclerView.setAdapter(pickerViewAdapter);

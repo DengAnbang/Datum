@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import java.util.List;
@@ -30,7 +30,10 @@ public class PickerViewAdapter extends RecyclerView.Adapter<PickerViewAdapter.Vi
     private int mThreshold;
     private int mItemHeight;
     private int mSlidingDistance;
-
+    private float startAngle = 80;
+    private float endAngle = -80;
+    private float maxSize = 36;
+    private float minSize = 18;
     public PickerViewAdapter(RecyclerView recyclerView, List<String> stringList) {
 //        stringList.add(0, "");
 //        stringList.add(0, "");
@@ -85,26 +88,23 @@ public class PickerViewAdapter extends RecyclerView.Adapter<PickerViewAdapter.Vi
             }
 //            if (!a) return;
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-//                if (mSlidingDistance > mRecyclerViewHeight / 10) {
-                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-//                if (a) {
-//                    mSlidingDistance = mSlidingDistanceTotal % mItemHeight;
-//                    a = false;
-//                }
+//                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+//                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+////                if (mSlidingDistance > mRecyclerViewHeight / 10) {
+//                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+////                if (a) {
+////                    mSlidingDistance = mSlidingDistanceTotal % mItemHeight;
+////                    a = false;
+////                }
                 mSlidingDistance = mSlidingDistanceTotal % mItemHeight;
-                if (mSlidingDistance > mItemHeight / 2 + 5) {
-                    mSlidingDistance = -(mItemHeight - mSlidingDistance);
-                    recyclerView.smoothScrollBy(0, mSlidingDistance, new LinearInterpolator());
-//                    Log.e(TAG, "onScrollStateChanged: 下滑" + (mItemHeight - slidingDistance));
-                } else if (mSlidingDistance < mItemHeight / 2 - 5){
-                    recyclerView.smoothScrollBy(0, mSlidingDistance, new LinearInterpolator());
-//                    Log.e(TAG, "onScrollStateChanged: 上滑" + slidingDistance);
+                if (mSlidingDistance > mItemHeight / 2) {
+                    mSlidingDistance = (mItemHeight - mSlidingDistance);
+
+                } else if (mSlidingDistance < mItemHeight / 2) {
+                    mSlidingDistance = -mSlidingDistance;
                 }
-//                Log.e(TAG, "onScrollStateChanged: " + slidingDistance);
+                recyclerView.smoothScrollBy(0, mSlidingDistance, new AccelerateDecelerateInterpolator());
 //                recyclerView.smoothScrollBy(0, mSlidingDistance, new LinearInterpolator());
-                a = false;
             }
 
         }
@@ -113,28 +113,79 @@ public class PickerViewAdapter extends RecyclerView.Adapter<PickerViewAdapter.Vi
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //            Log.e(TAG, "onScrolled: " + mFirstVisibleItemPosition);
             //180
-            Log.e(TAG, "onScrolled: " );
+//            Log.e(TAG, "onScrolled: " );
             mSlidingDistanceTotal += dy;
 //            mSlidingDistance = mSlidingDistance %(mRecyclerViewHeight / mEntryCount);
 //            Log.e(TAG, "onScrolled: " + (mSlidingDistanceTotal));
 //            Log.e(TAG, "onScrolled: " + mSlidingDistance + "****" + recyclerView.getChildCount());
 
-            int elected = mEntryCount / 2;
-//            for (int i = 0; i < recyclerView.getChildCount(); i++) {
-//                if (i < elected) {
-//                    TextView childAt = (TextView) recyclerView.getChildAt(i);
-//                    childAt.setRotationX(60);
-//                } else if (i > elected) {
-//                    TextView childAt = (TextView) recyclerView.getChildAt(i);
-//                    childAt.setRotationX(300);
-//                } else {
-//                    TextView childAt = (TextView) recyclerView.getChildAt(i);
-//                    childAt.setRotationX(0);
-//                }
-
+//            TextView childAt = (TextView) recyclerView.getChildAt(0);
+//            TextView childAt1 = (TextView) recyclerView.getChildAt(1);
+//            TextView childAt2 = (TextView) recyclerView.getChildAt(2);
+//            TextView childAt3 = (TextView) recyclerView.getChildAt(3);
+//            TextView childAt4 = (TextView) recyclerView.getChildAt(4);
+//            TextView childAt5 = (TextView) recyclerView.getChildAt(5);
+//            childAt.setRotationX(80+getChangeScale());
+//            childAt1.setRotationX(45+getChangeScale());
+//            childAt2.setRotationX(0+getChangeScale());
+//            childAt3.setRotationX(-45+getChangeScale());
+//            childAt4.setRotationX(-80+getChangeScale());
+//            if (childAt5 != null) {
+//                childAt5.setRotationX(-125+getChangeScale());
 //            }
+
+
+            for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                TextView childAt = (TextView) recyclerView.getChildAt(i);
+                childAt.setRotationX(getRotateAngle(i));
+                if ( i == mEntryCount / 2) {
+                    childAt.setTextSize(28);
+                } else {
+                    childAt.setTextSize(18);
+                }
+//                childAt.setTextSize(getTextSize(i));
+                Log.e(TAG, i + "onScrolled: " + getTextSize(i));
+            }
         }
     };
+
+    /**
+     * 获取旋转的角度
+     *
+     * @param position
+     * @return
+     */
+    private float getRotateAngle(int position) {
+        float totalAngle = endAngle - startAngle;
+        float eachAngle = totalAngle / (mEntryCount - 1);
+        return getChangeScale() * Math.abs(eachAngle) + startAngle + (eachAngle * position);
+    }
+
+    private float getTextSize(int position) {
+        float totalSize = maxSize - minSize;
+        float eachSize = totalSize / (mEntryCount - 1);
+        int elected = mEntryCount / 2;
+        if (position == elected) {
+            return maxSize;
+        }
+        if (position < elected) {
+            return getChangeScale() * Math.abs(eachSize) + minSize + (eachSize * position);
+        } else {
+            return maxSize - getChangeScale() * Math.abs(eachSize) - (eachSize * position);
+        }
+//        return getChangeScale() * Math.abs(eachSize);
+    }
+
+    /**
+     * 获取比例
+     *
+     * @return
+     */
+    private float getChangeScale() {
+        mSlidingDistance = mSlidingDistanceTotal % mItemHeight;
+        return (float) (mSlidingDistance) / mItemHeight;
+    }
+
 
     @Override
     public int getItemCount() {

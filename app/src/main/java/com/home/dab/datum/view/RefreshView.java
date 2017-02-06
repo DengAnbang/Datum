@@ -45,8 +45,8 @@ public class RefreshView extends ViewGroup {
     private static final int FLAG_DOWN_MAX_DISTANCE = 2;//标志设置了最大的上拉距离
 
     public static final int PULL_LEISURE_REFRESH = 0;
-    public static final int PULL_TOP_LOAD = 1;//标志当前进入的x下拉刷新模式
-    public static final int PULL_DOWN_LOAD = 2;//标志当前进入的上拉加载模式
+    public static final int FLAG_PULL_DOWN = 1;//标志当前进入的x下拉刷新模式
+    public static final int FLAG_PULL_UP = 2;//标志当前进入的上拉加载模式
 
     public int state;
     //触摸获得Y的位置
@@ -55,7 +55,7 @@ public class RefreshView extends ViewGroup {
     private View mContentView, mHeadView, mFootView;
     private List<View> mConflictViews;
     private OnRefreshViewListener mRefreshViewListener;
-
+    private boolean isAllowPullDown = true, isAllowPullUpward = true;
 
     public void setRefreshViewListener(OnRefreshViewListener refreshViewListener) {
         mRefreshViewListener = refreshViewListener;
@@ -68,6 +68,14 @@ public class RefreshView extends ViewGroup {
      */
     public void setStartTopRefreshDistance(float startTopRefreshDistance) {
         mStartTopRefreshDistance = startTopRefreshDistance;
+    }
+
+    public void setPullUpwardEnabled(boolean enabled) {
+        isAllowPullUpward = enabled;
+    }
+
+    public void setPullDownEnabled(boolean enabled) {
+        isAllowPullDown = enabled;
     }
 
     /**
@@ -84,10 +92,11 @@ public class RefreshView extends ViewGroup {
      *
      * @param conflictView
      */
-    public void setConflictView(@NonNull View conflictView) {
+    public void addConflictView(@NonNull View conflictView) {
         if (mConflictViews == null) {
             mConflictViews = new ArrayList<>();
         }
+        if (!mConflictViews.contains(conflictView))
         mConflictViews.add(conflictView);
     }
 
@@ -267,45 +276,37 @@ public class RefreshView extends ViewGroup {
         return mViewDragHelper.shouldInterceptTouchEvent(event);
     }
 
-    private boolean mBoolean;
+    private boolean mBoolean;//防止在滑动过程中重新布局
     private boolean isInterceptTouchEvent(MotionEvent event) {
         //获取滑动时的Y值变化
         float y = event.getY() - mTouchY;
         //如果是手指向上滑,就交给ViewDragHelper的shouldInterceptTouchEvent去判断
-//        if (y < 0) return mViewDragHelper.shouldInterceptTouchEvent(event);
+
 
         //如果没有设置冲突的view,就根据mContentView来判断是否需要拦截
-        if (mConflictViews == null && canChildScrollUp(mContentView)) {
-            return false;
-        } else
-            //如果设置了冲突的view
-            if (mConflictViews != null) {
-                //遍历冲突的view集合
-                for (int i = 0; i < mConflictViews.size(); i++) {
-                    View view = mConflictViews.get(i);
-                    //判断这个view是否被触摸
-                    boolean touched = isTouched(view, event.getRawX(), event.getRawY());
-                    //如果被触摸了,则判断这个view还能不能向上滑动,如果能则不拦截事件
-//                    if (touched) {
-//                        if (canChildScrollUp(view)) {
-//                            return false;
-//                        }
-//                    }
-                    if (touched) {
-                        if (y < 0) {
-                            if (canChildScrollDown(view)) {
-                                return false;
-                            }
-                        } else {
-                            if (canChildScrollUp(view)) {
-                                return false;
-                            }
-                        }
+        if (mConflictViews == null) {
+            addConflictView(mContentView);
+        }
+
+        //遍历冲突的view集合
+        for (int i = 0; i < mConflictViews.size(); i++) {
+            View view = mConflictViews.get(i);
+            //判断这个view是否被触摸
+            boolean touched = isTouched(view, event.getRawX(), event.getRawY());
+            if (touched) {
+                if (y < 0) {
+                    if (canChildScrollDown(view)) {
+                        return false;
+                    }
+                } else {
+                    if (canChildScrollUp(view)) {
+                        return false;
                     }
                 }
             }
-        boolean b = mViewDragHelper.shouldInterceptTouchEvent(event);
-        return b;
+        }
+
+        return mViewDragHelper.shouldInterceptTouchEvent(event);
     }
 
     @Override
@@ -325,20 +326,37 @@ public class RefreshView extends ViewGroup {
 
 //            if (mTopMaxDistance != 0 && top > mTopMaxDistance) top = mTopMaxDistance;
 //            if (mDownMaxDistance != 0 && -top > mTopMaxDistance) top = -mTopMaxDistance;
-            if (top >= 0) {
+//            if (top >= 0) {
                 mBoolean = true;
+//            }
+            if (isAllowPullDown) {
+                mTopMaxDistance = ((flag & FLAG_TOP_MAX_DISTANCE) == FLAG_TOP_MAX_DISTANCE) ? mTopMaxDistance : (int) mHeadHeight;
+                if (top > mTopMaxDistance) top = mTopMaxDistance;
+            } else {
+                if (top > 0) top = 0;
             }
-            mTopMaxDistance = ((flag & FLAG_TOP_MAX_DISTANCE) == FLAG_TOP_MAX_DISTANCE) ? mTopMaxDistance : (int) mHeadHeight;
-            if (top > mTopMaxDistance) top = mTopMaxDistance;
+
+
             if (mFootView != null) {
-                mDownMaxDistance = ((flag & FLAG_DOWN_MAX_DISTANCE) == FLAG_DOWN_MAX_DISTANCE) ? mDownMaxDistance : (int) mFootHeight;
-                if (-top > mDownMaxDistance) top = -mDownMaxDistance;
+
+                if (isAllowPullUpward) {
+                    mDownMaxDistance = ((flag & FLAG_DOWN_MAX_DISTANCE) == FLAG_DOWN_MAX_DISTANCE) ? mDownMaxDistance : (int) mFootHeight;
+                    if (-top > mDownMaxDistance) top = -mDownMaxDistance;
+                } else {
+                    if (top < 0) top = 0;
+                }
+
             } else if (top < 0) top = 0;
 
             if (state == PULL_LEISURE_REFRESH) {
                 //回调出去当前拉的距离
                 if (mRefreshViewListener != null) {
-                    mRefreshViewListener.onPullDownDistanceChange((top < 0) ? PULL_DOWN_LOAD : PULL_TOP_LOAD, (int) (mStartTopRefreshDistance), top);
+                    if (top < 0 && isAllowPullUpward) {
+                        mRefreshViewListener.onPullDownDistanceChange(FLAG_PULL_UP, (int) (mStartTopRefreshDistance), top);
+                    }
+                    if (top > 0 && isAllowPullDown) {
+                        mRefreshViewListener.onPullDownDistanceChange(FLAG_PULL_DOWN, (int) (mStartTopRefreshDistance), top);
+                    }
                 }
             }
             return top;
@@ -368,13 +386,13 @@ public class RefreshView extends ViewGroup {
             mBoolean = false;
             //判断是否应该刷新
             if (mContentView.getTop() > mStartTopRefreshDistance) {
-                state = PULL_TOP_LOAD;
+                state = FLAG_PULL_DOWN;
                 mViewDragHelper.smoothSlideViewTo(mContentView, 0, (int) mStartTopRefreshDistance);
                 ViewCompat.postInvalidateOnAnimation(RefreshView.this);
             } else if (mFootView != null) {
                 if (-mContentView.getTop() > mStartDownLoadDistance) {
-                    state = PULL_DOWN_LOAD;
-                    mViewDragHelper.smoothSlideViewTo(mContentView, 0, mContentView.getTop());
+                    state = FLAG_PULL_UP;
+                    mViewDragHelper.smoothSlideViewTo(mContentView, 0, -(int) mStartDownLoadDistance);
                     ViewCompat.postInvalidateOnAnimation(RefreshView.this);
                 } else close();
             } else close();
@@ -402,13 +420,6 @@ public class RefreshView extends ViewGroup {
         //判断是否滚动完成,没有则继续
         if (mViewDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(RefreshView.this);
-        } else {
-//            //滚动完成,来根据状态判断是否需要需要回调刷新
-//            if (state != PULL_LEISURE_REFRESH) {
-//                if (mRefreshViewListener != null) {
-//                    mRefreshViewListener.onRefreshing(state);
-//                }
-//            }
         }
     }
 
@@ -435,7 +446,7 @@ public class RefreshView extends ViewGroup {
     }
 
     /**
-     * 用来判断是否可以下拉(解决点击冲突用)
+     * 用来判断是否可以上拉(解决点击冲突用)
      */
     public static boolean canChildScrollDown(View mChildView) {
         if (mChildView == null) {

@@ -26,5 +26,6 @@ public class PickerView extends AppCompatActivity {
         }
         PickerViewAdapter pickerViewAdapter = new PickerViewAdapter(mRecyclerView,strings);
         mRecyclerView.setAdapter(pickerViewAdapter);
+
     }
 }

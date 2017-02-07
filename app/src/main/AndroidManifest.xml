@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.CAMERA"/>
     <!-- renren sso Permission for Unit Test -->
     <!-- QQ、QQ空间所需权限 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
@@ -155,6 +155,8 @@
         <activity android:name=".demo.album.AlbumActivity">
         </activity>
         <activity android:name=".demo.pickerView.PickerView">
+        </activity>
+        <activity android:name=".demo.camera.CameraActivity">
         </activity>
     </application>
 

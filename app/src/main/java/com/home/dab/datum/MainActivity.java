@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.home.dab.datum.demo.album.AlbumActivity;
+import com.home.dab.datum.demo.camera.CameraActivity;
 import com.home.dab.datum.demo.changeIcon.ChangeIcon;
 import com.home.dab.datum.demo.crypto.Crypto;
 import com.home.dab.datum.demo.download.Download;
@@ -90,5 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void picker(View view) {
         startActivity(new Intent(MainActivity.this, PickerView.class));
+    }
+
+    public void camera(View view) {
+        startActivity(new Intent(MainActivity.this, CameraActivity.class));
+
     }
 }

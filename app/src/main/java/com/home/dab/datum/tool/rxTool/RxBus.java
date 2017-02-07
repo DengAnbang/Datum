@@ -33,7 +33,7 @@ public class RxBus {
     }
 
     /**
-     *  如果发生错误,就会自动取消订阅
+     *  如果发生异常,就会自动取消订阅,可以使用retryWhen操作符进行重新订阅
      * @param tag
      * @param clazz
      * @param <T>
@@ -44,6 +44,7 @@ public class RxBus {
         Subject subject;
         if (maps.containsKey(tag)) {
             subject = maps.get(tag);
+
         } else {
             subject = PublishSubject.<T>create();
             maps.put(tag, subject);
@@ -52,13 +53,15 @@ public class RxBus {
     }
 
     /**
-     * 不是必须的
+     * 反注册
      *
      * @param tag
      */
     public void unregister(@NonNull Object tag) {
         if (maps.containsKey(tag)) {
             maps.remove(tag);
+        } else {
+            throw new RuntimeException("没有注册这个" + tag.toString() + "Subject");
         }
     }
 
@@ -67,6 +70,8 @@ public class RxBus {
         if (maps.containsKey(tag)) {
             Subject subject = maps.get(tag);
             subject.onNext(o);
+        } else {
+            throw new RuntimeException("没有注册这个" + tag.toString() + "Subject");
         }
     }
 
